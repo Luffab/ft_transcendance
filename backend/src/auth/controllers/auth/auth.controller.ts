@@ -19,7 +19,7 @@ export class AuthController {
 	@Get('redirect')
 	@UseGuards(FTAuthGuard)
 	redirect(@Res() res: Response) {
-		res.redirect('http://10.64.1.83:8080/dashboard')
+		res.redirect('http://localhost:3000')
 	}
 
 	// the auth status is in /api/auth/status

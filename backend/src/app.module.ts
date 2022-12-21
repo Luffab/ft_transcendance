@@ -9,16 +9,17 @@ import { FortytwoModule } from './fortytwo/fortytwo.module';
 
 @Module({
   imports: [
-	  		TypeOrmModule.forRoot({
-				  type: 'postgres',
-				  host: 'db',
-				  port: 5432,
-				  username: 'postgres',
-				  password: 'postgres',
-				  database: '',
-				  entities,
-				  synchronize: true,
-			  }),
+			ConfigModule.forRoot({ envFilePath: 'back.env'}),
+			TypeOrmModule.forRoot({
+				type: 'postgres',
+				host: process.env.DB_HOST,
+				port: Number.parseInt(process.env.DB_PORT),
+				username: process.env.DB_USERNAME,
+				password: process.env.DB_PASSWORD,
+				database: process.env.DB_DATABASE,
+				entities,
+				synchronize: true,
+			}),
 	  		ConfigModule.forRoot({ envFilePath: '.env.development' }),
 	  		AuthModule, 
 			UsersModule,
