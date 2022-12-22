@@ -20,7 +20,7 @@ export class AuthController {
 	@UseGuards(FTAuthGuard)
 	redirect(@Res() res: Response) {
 		console.log(process.env.DB_PORT);
-		res.redirect('http://localhost:3000')
+		res.redirect(process.env.FT_REDIRECT_URL);
 	}
 
 	// the auth status is in /api/auth/status
