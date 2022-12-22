@@ -1,15 +1,11 @@
 FROM node:latest
 
-WORKDIR /app
-
-COPY package.json .
-
-COPY ["package.json", "package-lock*", "./"]
-
-RUN npm ci
+WORKDIR /usr/src/app/my-app
 
 COPY . .
 
-RUN npm run build
+RUN npm install
+
+EXPOSE 3000
 
 CMD ["npm", "start"]

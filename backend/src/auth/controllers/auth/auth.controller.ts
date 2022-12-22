@@ -19,6 +19,7 @@ export class AuthController {
 	@Get('redirect')
 	@UseGuards(FTAuthGuard)
 	redirect(@Res() res: Response) {
+		console.log(process.env.DB_PORT);
 		res.redirect('http://localhost:3000')
 	}
 
