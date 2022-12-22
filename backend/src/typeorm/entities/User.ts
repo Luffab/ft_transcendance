@@ -14,10 +14,10 @@ export class User{
 	@Column({ nullable: true })
 	avatar: string;
 
-	//@Column({ name: 'access_token' })
-	//accessToken: string;
-//
-	//@Column({ name: 'refresh_token' })
-	//refreshToken: string;
+	@Column({ name: 'access_token' })
+	accessToken: string;
+
+	@Column({ name: 'refresh_token' })
+	refreshToken: string;
 
 }

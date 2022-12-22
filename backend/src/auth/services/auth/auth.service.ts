@@ -13,9 +13,10 @@ export class AuthService implements AuthenticationProvider {
 
 	async validateUser(details: UserDetails) {
 		const { ft_id } = details;
-		const user = await this.userRepo.findOne({ where: {ft_id: ft_id} });
+		const user = await this.userRepo.findOne({ ft_id });
 		if (user) {
-			await this.userRepo.update({ ft_id }, details)
+			await this.userRepo.update({ ft_id }, details);
+			console.log('User Updated');
 			return user;
 		}
 		return this.createUser(details);
