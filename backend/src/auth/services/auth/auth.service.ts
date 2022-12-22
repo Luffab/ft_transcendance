@@ -13,10 +13,10 @@ export class AuthService implements AuthenticationProvider {
 
 	async validateUser(details: UserDetails) {
 		const { ft_id } = details;
-		const user = await this.userRepo.findOne({ ft_id });
+		const user = await this.userRepo.findOne({ where: {ft_id: ft_id } });
 		if (user) {
-			await this.userRepo.update({ ft_id }, details);
-			console.log('User Updated');
+			await this.userRepo.update({ ft_id }, details)
+			console.log('User updated')
 			return user;
 		}
 		return this.createUser(details);
@@ -29,7 +29,7 @@ export class AuthService implements AuthenticationProvider {
 	}
 
 	findUser(ft_id: string): Promise<User | undefined> {
-		return this.userRepo.findOne({ where: {ft_id: ft_id} })
+		return this.userRepo.findOne({ where: { ft_id: ft_id } })
 	}
 }
 
