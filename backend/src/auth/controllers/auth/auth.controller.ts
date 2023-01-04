@@ -37,10 +37,3 @@ export class AuthController {
 	logout() {}
 }
 
-@Controller('finish')
-export class AuthFinish {
-	@Get('slt')
-	finish() {
-		return 'salut mon pote';
-	}
-}

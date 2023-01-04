@@ -32,5 +32,3 @@ export class AuthService implements AuthenticationProvider {
 		return this.userRepo.findOne({ where: { ft_id: ft_id } })
 	}
 }
-
-// VIDEO STOP A 1h12
