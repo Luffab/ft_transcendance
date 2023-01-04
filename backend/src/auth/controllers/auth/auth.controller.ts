@@ -27,13 +27,29 @@ export class AuthController {
 
 	@Get('status')
 	@UseGuards(AuthenticatedGuard)
-	status(@Req() req: Request) {
-		return req.user;
+	status(@Res() res: Response, @Req() req: Request) {
+		let jwt = require('jwt-simple');
+		let payload = req.user;
+		let secret = 'eewn3g3rg5rg4564DDD**rfrgtbt8r79bjvrfrf';
+		let token = jwt.encode(payload, secret);
+		res.send(token);
 	}
 
 	// logout in /api/auth/logout
 
 	@Get('logout')
-	logout() {}
+  	@UseGuards(AuthenticatedGuard)
+  	logout(@Req() req: Request) {
+    	//req.logOut();
+  	}
+
+	  //test
+
+	@Get('test')
+	@UseGuards(AuthenticatedGuard)
+	test(@Res() res: Response) {
+		res.send({"name":"GeeksforGeeks"});
+		//return "Bonjour";
+	}
 }
 
