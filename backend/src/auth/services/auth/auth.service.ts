@@ -4,12 +4,19 @@ import { User } from 'src/typeorm';
 import { UserDetails } from 'src/utils/types';
 import { Repository } from 'typeorm';
 import { AuthenticationProvider } from './auth'
+import { authenticator } from 'otplib';
+import { UserDTO } from 'src/users/dto/User.dto';
+import { UserService } from 'src/users/services/user/user.service';
+import { toDataURL } from 'qrcode';
+
+let jwt = require('jwt-simple');
 
 @Injectable()
 export class AuthService implements AuthenticationProvider {
 	constructor(
 		@InjectRepository(User) private userRepo:
-		Repository<User>) {}
+		Repository<User>,
+		private usersService: UserService) {}
 
 	async validateUser(details: UserDetails) {
 		const { ft_id } = details;
@@ -31,4 +38,52 @@ export class AuthService implements AuthenticationProvider {
 	findUser(ft_id: string): Promise<User | undefined> {
 		return this.userRepo.findOne({ where: { ft_id: ft_id } })
 	}
+
+	async login(user: UserDTO) {
+		const payload = user.username;
+		let secret = process.env.JWT_SECRET;
+		let token = jwt.encode(payload, secret);
+		return(token);
+	}
+
+	async login2fa(user: UserDTO) {
+		const payload = {
+			isTwoFactorAuthenticationEnabled: !!user.isTwoFactorAuthenticationEnabled,
+			isTwoFactorAuthenticated: true,
+		  };
+		let secret = process.env.JWT_SECRET;
+		let token = jwt.encode(payload, secret);
+		return(token);
+	}
+
+	async generateTwoFactorAuthenticationSecret(user: User) {
+		const secret = authenticator.generateSecret();
+	
+		const otpAuthUrl = authenticator.keyuri(
+		  user.username,
+		  'AUTH_APP_NAME',
+		  secret,
+		);
+	
+		await this.usersService.setTwoFactorAuthenticationSecret(
+		  secret,
+		  user.username,
+		);
+	
+		return {
+		  secret,
+		  otpAuthUrl,
+		};
+	  }
+
+	  async generateQrCodeDataURL(otpAuthUrl: string) {
+		return toDataURL(otpAuthUrl);
+	  }
+
+	  isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: UserDTO) {
+		return authenticator.verify({
+		  token: twoFactorAuthenticationCode,
+		  secret: user.twoFactorAuthenticationSecret,
+		});
+	  }
 }
