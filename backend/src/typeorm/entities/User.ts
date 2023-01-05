@@ -20,4 +20,10 @@ export class User{
 	@Column({ name: 'refresh_token' })
 	refreshToken: string;
 
+	@Column({ nullable: true })
+	twoFactorAuthSecret?: string
+
+	@Column({ default: false })
+	public isTwoFactorEnable: boolean
+
 }
