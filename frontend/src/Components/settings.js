@@ -1,7 +1,7 @@
 export default function Root() {
     return (
       <>
-        <h1>Bonjour</h1>
+        <h1>Settings</h1>
       </>
     );
   }
