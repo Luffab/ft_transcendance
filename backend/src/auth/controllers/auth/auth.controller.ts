@@ -24,7 +24,7 @@ export class AuthController {
 	redirect(@Res() res: Response, @Req() req: Request) {
 		let jwt = require('jwt-simple');
 		let reqq = JSON.parse(JSON.stringify(req.user));
-		let secret = 'eewn3g3rg5rg4564DDD**rfrgtbt8r79bjvrfrf';
+		let secret = process.env.JWT_SECRET;
 		let payload = reqq.username;
 		let token = jwt.encode(payload, secret);
 		res.redirect(process.env.FT_REDIRECT_URL + "?jwt=" + token);
