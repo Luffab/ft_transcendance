@@ -28,16 +28,16 @@ services:
       - ./src:/back/src
     depends_on:
       - db
-  front:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-     - 3000:3000
-    volumes:
-      - ./src:/front/src
-    depends_on:
-     - db
+#  front:
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    ports:
+#     - 3000:3000
+#    volumes:
+#      - ./src:/front/src
+#    depends_on:
+#     - db
 
 
 volumes:
