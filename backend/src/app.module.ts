@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { entities } from './typeorm';
 import { UsersModule } from './users/users.module';
 import { FortytwoModule } from './fortytwo/fortytwo.module';
+import { ChatGateway } from './chat/chat.gateway';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { FortytwoModule } from './fortytwo/fortytwo.module';
 			FortytwoModule,
 		],
   controllers: [],
-  providers: [],
+  providers: [ChatGateway],
 })
 export class AppModule {}

@@ -27,6 +27,8 @@ import Home from "./Components/home";
 import Bonjour from "./Components/bonjour";
 import Game from "./Components/game";
 import Update_profil from "./Components/update_profil";
+import Settings from "./Components/settings";
+import Chat from "./Components/chat";
 
 const router = createBrowserRouter([
     {path: "/",element: <Welcome />,},
@@ -34,7 +36,7 @@ const router = createBrowserRouter([
     //{path: "/login",element: <Login />,},
     {path: "/get_code",element: <Bonjour />,},
     {path: "/update_profil",element: <Update_profil />,},
-    {path: "/chat",element: <Bonjour />,},
+    {path: "/chat",element: <Chat />,},
     {path: "/stats_and_match_history",element: <Bonjour />,},
     {path: "/game",element: <Game />,},
   ]);
