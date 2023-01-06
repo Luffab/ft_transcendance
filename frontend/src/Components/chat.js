@@ -17,6 +17,7 @@ export default function Broot() {
 
 	const messageListener = (message) => {
 		setMessages([...messages, message])
+		console.log(JSON.stringify(messages[0]))
 	}
 	useEffect(() => {
 		socket?.on("message", messageListener)
