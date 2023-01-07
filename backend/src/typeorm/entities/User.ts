@@ -23,9 +23,6 @@ export class User{
 	@Column({ nullable: true })
 	verify_code: string;
 
-	@Column({ name: 'photos', nullable: true})
-	photos: string;
-
 	@Column({ default: false})
 	is2fa: boolean;
 

@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { FortytwoModule } from './fortytwo/fortytwo.module';
 import { MailModule } from './mail/mail.module';
 import { ChatGateway } from './chat/chat.gateway';
+import { MailService } from './mail/mail.service';
 
 @Module({
   imports: [

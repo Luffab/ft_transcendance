@@ -6,6 +6,5 @@ export interface AuthenticationProvider {
 	createUser(details: UserDetails);
 	findUser(ft_id: string): Promise<User | undefined>;
 	find2fa(tfa: boolean): Promise<User | undefined>;
-	loginuser(user: Partial<User>);
 	generate2fa(ft_id: string, user: User);
 }

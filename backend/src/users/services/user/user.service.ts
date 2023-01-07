@@ -21,12 +21,4 @@ export class UserService implements IUserService{
 	getUserByUsername(username: string): UserDTO | undefined {
 		return this.users.find((user) => user.username === username);
 	}
-
-	async setTwoFactorAuthenticationSecret(secret: string, username: string) {
-		this.users.find(user => user.username === username).twoFactorAuthenticationSecret = secret;
-	  }
-	
-	  async turnOnTwoFactorAuthentication(username: string) {
-		this.users.find(user => user.username === username).isTwoFactorAuthenticationEnabled = true;
-	  }
 }

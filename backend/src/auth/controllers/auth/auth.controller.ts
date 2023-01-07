@@ -19,8 +19,8 @@ export class AuthController {
 
 	@Get('login')
 	@UseGuards(FTAuthGuard)
-	login(@Req() req: Request, @Res() res: Response) {
-		res.send(this.authenticationService.loginuser(req.user));
+	login() {
+		return;;
 	}
 	
 	// the redirect url is in /api/auth/redirect
@@ -46,12 +46,14 @@ export class AuthController {
   	logout(@Req() req: Request) {
     	//req.logOut();
   	}
-	
+
+	  //test
+
 	  @Get('2fa/generate')
 	  @UseGuards(AuthenticatedGuard)
 	  generate(@Req() req: Request) {
-		let reqq = JSON.parse(JSON.stringify(req.user));
-		return this.authenticationService.generate2fa(reqq.ft_id, req.user)
+		  let reqq = JSON.parse(JSON.stringify(req.user));
+		  return this.authenticationService.generate2fa(reqq.ft_id, req.user)
 	  }
 }
 

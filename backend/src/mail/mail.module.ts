@@ -15,7 +15,7 @@ import { join } from 'path';
 		port: 465,
         auth: {
           user: 'apikey',
-          pass: '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',
+          pass: process.env.SENDGRID_KEY,
         },
       },
       defaults: {

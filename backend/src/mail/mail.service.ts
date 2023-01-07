@@ -9,7 +9,7 @@ export class MailService {
 
   async sendUserConfirmation(mail: string, username: string, code: string) {
     await this.mailerService.sendMail({
-      to: 'fabien.luffab@gmail.com',
+      to: mail,
       from: 'fatilly@student.42lyon.fr', // override default from
       subject: 'Ton code de verification est la !',
       template: './confirmation', // `.hbs` extension is appended automatically
