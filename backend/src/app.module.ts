@@ -6,11 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { entities } from './typeorm';
 import { UsersModule } from './users/users.module';
 import { FortytwoModule } from './fortytwo/fortytwo.module';
-<<<<<<< HEAD
 import { MailModule } from './mail/mail.module';
-=======
 import { ChatGateway } from './chat/chat.gateway';
->>>>>>> 07d5422aaeba0f64a8aa166adb1e0f8b2be098b3
 
 @Module({
   imports: [
