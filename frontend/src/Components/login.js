@@ -14,7 +14,7 @@ export default function Root() {
     if (code === null && response_type === null)
         //return redirect("/login");
         //return <Navigate replace to="https://www.google.com" />
-        window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-d119bf510c7b748d6cea73576d2e8984f85af7f05cbff0e651acea0134950c04&redirect_uri=http%3A%2F%2F10.4.2.5%3A3000%2Flogin&response_type=code'
+        window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-d119bf510c7b748d6cea73576d2e8984f85af7f05cbff0e651acea0134950c04&redirect_uri=http%3A%2F%2F10.4.1.7%3A3000%2Flogin&response_type=code'
     else
         return (
         <>

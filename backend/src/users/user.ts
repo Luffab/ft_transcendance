@@ -5,4 +5,6 @@ export interface IUserService {
 	getUser();
 	deleteUser();
 	getUserByUsername(username: string): UserDTO | undefined;
+	setTwoFactorAuthenticationSecret(secret: string, username: string);
+	turnOnTwoFactorAuthentication(username: string);
 }

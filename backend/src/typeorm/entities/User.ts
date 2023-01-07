@@ -11,13 +11,22 @@ export class User{
 	@Column()
 	username: string;
 
-	@Column({ nullable: true })
-	avatar: string;
-
 	@Column({ name: 'access_token' })
 	accessToken: string;
 
 	@Column({ name: 'refresh_token' })
 	refreshToken: string;
+
+	@Column({ name: 'emails', nullable: true })
+	emails: string;
+
+	@Column({ nullable: true })
+	verify_code: string;
+
+	@Column({ name: 'photos', nullable: true})
+	photos: string;
+
+	@Column({ default: false})
+	is2fa: boolean;
 
 }

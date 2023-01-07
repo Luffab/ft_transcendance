@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards, Post, UnauthorizedException, Body } from '@nestjs/common';
+import { Controller, Get, Req, Res, UseGuards, Post, UnauthorizedException, Body, Put, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response, Request } from 'express';
 import { AuthenticatedGuard, FTAuthGuard } from 'src/auth/guards';
@@ -19,8 +19,8 @@ export class AuthController {
 
 	@Get('login')
 	@UseGuards(FTAuthGuard)
-	login() {
-		return;
+	login(@Req() req: Request, @Res() res: Response) {
+		res.send(this.authenticationService.loginuser(req.user));
 	}
 	
 	// the redirect url is in /api/auth/redirect
@@ -31,8 +31,11 @@ export class AuthController {
 		let jwt = require('jwt-simple');
 		let reqq = JSON.parse(JSON.stringify(req.user));
 		let secret = process.env.JWT_SECRET;
-		let payload = reqq.username;
+		let payload = {
+			username: reqq.username,
+			is2fa: reqq.is2fa };
 		let token = jwt.encode(payload, secret);
+		console.log(token);
 		res.redirect(process.env.FT_REDIRECT_URL + "?jwt=" + token);
 	}
 
@@ -43,33 +46,12 @@ export class AuthController {
   	logout(@Req() req: Request) {
     	//req.logOut();
   	}
-
-	@Post('2fa/generate')
-  	@UseGuards(FTAuthGuard)
-  	async register(@Res() res, @Req() req) {
-  	  const { otpAuthUrl } =
-  	    await this.authenticationService.generateTwoFactorAuthenticationSecret(
-  	      req.user,
-  	    );
-		
-  	  return res.json(
-  	    await this.authenticationService.generateQrCodeDataURL(otpAuthUrl),
-  	  );
-  	}
-
-	  @Post('2fa/turn-on')
-  	@UseGuards(FTAuthGuard)
-  	async turnOnTwoFactorAuthentication(@Req() req, @Body() body) {
-  	  const isCodeValid =
-  	    this.authenticationService.isTwoFactorAuthenticationCodeValid(
-  	      body.twoFactorAuthenticationCode,
-  	      req.user,
-  	    );
-  	  if (!isCodeValid) {
-  	    throw new UnauthorizedException('Wrong authentication code');
-  	  }
-  	  await this.usersService.turnOnTwoFactorAuthentication(req.user.username);
-  	}
-
+	
+	  @Get('2fa/generate')
+	  @UseGuards(AuthenticatedGuard)
+	  generate(@Req() req: Request) {
+		let reqq = JSON.parse(JSON.stringify(req.user));
+		return this.authenticationService.generate2fa(reqq.ft_id, req.user)
+	  }
 }
 

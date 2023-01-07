@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { entities } from './typeorm';
 import { UsersModule } from './users/users.module';
 import { FortytwoModule } from './fortytwo/fortytwo.module';
-import { 2faService } from './2fa/2fa.service';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -25,8 +25,9 @@ import { 2faService } from './2fa/2fa.service';
 			UsersModule,
 			PassportModule.register({ session: true }),
 			FortytwoModule,
+			MailModule,
 		],
   controllers: [],
-  providers: [2faService],
+  providers: [],
 })
 export class AppModule {}

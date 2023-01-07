@@ -1,6 +1,6 @@
 export default function Root() {
     function login() {
-        window.location.href='http://10.4.2.5:3001/api/auth/login'
+        window.location.href='http://10.1.1.1:3001/api/auth/login'
     }
     return (
       <>

@@ -8,6 +8,7 @@ import { authenticator } from 'otplib';
 import { UserDTO } from 'src/users/dto/User.dto';
 import { UserService } from 'src/users/services/user/user.service';
 import { toDataURL } from 'qrcode';
+import { MailService } from 'src/mail/mail.service';
 
 let jwt = require('jwt-simple');
 
@@ -16,13 +17,21 @@ export class AuthService implements AuthenticationProvider {
 	constructor(
 		@InjectRepository(User) private userRepo:
 		Repository<User>,
-		private usersService: UserService) {}
+		private usersService: UserService,
+		private mailService: MailService) {}
 
 	async validateUser(details: UserDetails) {
 		const { ft_id } = details;
+		const { emails } = details;
 		const user = await this.userRepo.findOne({ where: {ft_id: ft_id } });
 		if (user) {
 			await this.userRepo.update({ ft_id }, details)
+			//this.userRepo
+    		//	.createQueryBuilder()
+    		//	.update(User)
+    		//	.set({ emails: emails[0].value })
+    		//	.where("ft_id= :id", { id: ft_id })
+    		//	.execute()
 			console.log('User updated')
 			return user;
 		}
@@ -31,6 +40,7 @@ export class AuthService implements AuthenticationProvider {
 
 	createUser(details: UserDetails) {
 		console.log('Creating User');
+		//const { ft_id } = details;
 		const user = this.userRepo.create(details);
 		return this.userRepo.save(user);
 	}
@@ -39,51 +49,39 @@ export class AuthService implements AuthenticationProvider {
 		return this.userRepo.findOne({ where: { ft_id: ft_id } })
 	}
 
-	async login(user: UserDTO) {
+	find2fa(tfa: boolean): Promise<User | undefined> {
+		return this.userRepo.findOne({ where: { is2fa: tfa } })
+	}
+
+	async loginuser(user: Partial<User>) {
 		const payload = user.username;
 		let secret = process.env.JWT_SECRET;
 		let token = jwt.encode(payload, secret);
 		return(token);
 	}
 
-	async login2fa(user: UserDTO) {
-		const payload = {
-			isTwoFactorAuthenticationEnabled: !!user.isTwoFactorAuthenticationEnabled,
-			isTwoFactorAuthenticated: true,
-		  };
-		let secret = process.env.JWT_SECRET;
-		let token = jwt.encode(payload, secret);
-		return(token);
+	async generate2fa(ft_id: string, user: Partial<User>) {
+		if (this.userRepo.findOne({ where: { is2fa: false } })) {
+			let random = generateRandomString(6);
+			await this.userRepo
+    			.createQueryBuilder()
+    			.update(User)
+    			.set({ verify_code: random })
+    			.where("ft_id= :id", { id: ft_id })
+    			.execute()
+		}
+		await this.mailService.sendUserConfirmation(user.emails, user.username, user.verify_code);
 	}
-
-	async generateTwoFactorAuthenticationSecret(user: User) {
-		const secret = authenticator.generateSecret();
-	
-		const otpAuthUrl = authenticator.keyuri(
-		  user.username,
-		  'AUTH_APP_NAME',
-		  secret,
-		);
-	
-		await this.usersService.setTwoFactorAuthenticationSecret(
-		  secret,
-		  user.username,
-		);
-	
-		return {
-		  secret,
-		  otpAuthUrl,
-		};
-	  }
-
-	  async generateQrCodeDataURL(otpAuthUrl: string) {
-		return toDataURL(otpAuthUrl);
-	  }
-
-	  isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: UserDTO) {
-		return authenticator.verify({
-		  token: twoFactorAuthenticationCode,
-		  secret: user.twoFactorAuthenticationSecret,
-		});
-	  }
 }
+
+const generateRandomString = (myLength) => {
+	const chars =
+	  "0123456789";
+	const randomArray = Array.from(
+	  { length: myLength },
+	  (v, k) => chars[Math.floor(Math.random() * chars.length)]
+	);
+  
+	const randomString = randomArray.join("");
+	return randomString;
+  };
