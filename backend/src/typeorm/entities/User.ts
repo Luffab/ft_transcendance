@@ -20,10 +20,13 @@ export class User{
 	@Column({ name: 'refresh_token' })
 	refreshToken: string;
 
-	@Column({ nullable: true })
-	twoFactorAuthSecret?: string
+	@Column({ name: 'emails', nullable: true })
+	emails: string;
 
-	@Column({ default: false })
-	public isTwoFactorEnable: boolean
+	@Column({ nullable: true })
+	verify_code: string;
+
+	@Column({ default: false})
+	is2fa: boolean;
 
 }

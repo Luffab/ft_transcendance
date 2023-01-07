@@ -15,8 +15,8 @@ export class FTStrategy extends PassportStrategy(Strategy) {
 	}
 
 	async validate(accessToken: string, refreshToken: string, profile: Profile) {
-		const { username, id: ft_id, avatar } = profile;
-		const details = { username, ft_id, avatar, accessToken, refreshToken};
+		const { username, id: ft_id, avatar, emails } = profile;
+		const details = { username, ft_id, avatar, accessToken, refreshToken, emails};
 		return this.authService.validateUser(details);
 	}
 }

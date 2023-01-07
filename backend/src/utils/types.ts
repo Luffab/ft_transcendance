@@ -2,6 +2,7 @@ import { User } from 'src/typeorm';
 
 export type UserDetails = {
 	username: string;
+	emails: any
 	ft_id: string;
 	avatar: string;
 	accessToken: string;

@@ -2,12 +2,18 @@ import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response, Request } from 'express';
 import { AuthenticatedGuard, FTAuthGuard } from 'src/auth/guards';
+import { AuthService } from 'src/auth/services/auth/auth.service';
 import { User } from 'src/typeorm';
+import { UserService } from 'src/users/services/user/user.service';
 
 const parseRequest = require('parse-request');
 
 @Controller('auth')
 export class AuthController {
+	constructor(
+		private readonly authenticationService: AuthService,
+		private usersService: UserService,
+	 ) {}
 
 	// the user log with /api/auth/login
 
@@ -25,7 +31,9 @@ export class AuthController {
 		let jwt = require('jwt-simple');
 		let reqq = JSON.parse(JSON.stringify(req.user));
 		let secret = process.env.JWT_SECRET;
-		let payload = reqq.username;
+		let payload = {
+			username: reqq.username,
+			is2fa: reqq.is2fa };
 		let token = jwt.encode(payload, secret);
 		res.redirect(process.env.FT_REDIRECT_URL + "?jwt=" + token);
 	}
@@ -40,11 +48,11 @@ export class AuthController {
 
 	  //test
 
-	@Get('test')
-	@UseGuards(AuthenticatedGuard)
-	test(@Res() res: Response) {
-		res.send({"name":"GeeksforGeeks"});
-		//return "Bonjour";
-	}
+	  @Get('2fa/generate')
+	  @UseGuards(AuthenticatedGuard)
+	  generate(@Req() req: Request) {
+		  let reqq = JSON.parse(JSON.stringify(req.user));
+		  return this.authenticationService.generate2fa(reqq.ft_id, req.user)
+	  }
 }
 

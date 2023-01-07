@@ -7,6 +7,8 @@ import { entities } from './typeorm';
 import { UsersModule } from './users/users.module';
 import { FortytwoModule } from './fortytwo/fortytwo.module';
 import { ChatGateway } from './chat/chat.gateway';
+import { MailService } from './mail/mail.service';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { ChatGateway } from './chat/chat.gateway';
 			UsersModule,
 			PassportModule.register({ session: true }),
 			FortytwoModule,
+			MailModule,
 		],
   controllers: [],
   providers: [ChatGateway],
