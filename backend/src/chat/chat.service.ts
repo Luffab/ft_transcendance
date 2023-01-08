@@ -1,9 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from './entities/message.entity';
 import { MessageDto } from './dto/message.dto';
+import { UsersInChan } from 'src/typeorm/entities/UserinChan';
+import Channels from 'src/typeorm/entities/Channels';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Not, Repository } from 'typeorm';
+import { User } from 'src/typeorm';
+import { ChatProvider } from './chat';
+import { use } from 'passport';
+
+let jwt = require('jwt-simple');
 
 @Injectable()
-export class ChatService {
+export class ChatService implements ChatProvider{
+	constructor(
+		@InjectRepository(Channels) private readonly chanRepo: Repository<Channels>,
+		@InjectRepository(UsersInChan) private readonly userinchanRepo: Repository<UsersInChan>,
+		@InjectRepository(User) private readonly userRepo: Repository<User>,
+		private userinchan: UsersInChan,
+	) {}
 	//messageArray: Message[] = [{ name: 'Damien', text: 'prout' }]
 	userById = {};
 
@@ -46,5 +61,28 @@ export class ChatService {
 	//getAllMessages() {
 	//	return this.messageArray;
 	//}
+
+	getAllChannels(token: string) {
+		let secret = process.env.JWT_SECRET;
+		let usernametoken = jwt.decode(token, secret);
+		const chanid = this.userinchan.chanid;
+		if (this.userinchanRepo.findOne({ where: { username: usernametoken }})) {
+			const chan = (this.chanRepo.findBy({ id: chanid }))
+			console.log(chan)
+			return (chan);
+		}
+	}
+
+	async getAllUsers(token: string) {
+		let jwt = require('jwt-simple');
+		let secret = process.env.JWT_SECRET;
+		let usernametoken = jwt.decode(token, secret);
+		//let tokenn = JSON.parse(usernametoken);
+		const users = await this.userRepo.findBy({
+			username: Not(usernametoken.username),
+		})
+		console.log(usernametoken.username);
+		return users;
+	}
 
 }
