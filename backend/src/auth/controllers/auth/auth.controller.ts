@@ -12,7 +12,7 @@ const parseRequest = require('parse-request');
 export class AuthController {
 	constructor(
 		private readonly authenticationService: AuthService,
-		private usersService: UserService,
+		//private usersService: UserService,
 	  ) {}
 
 	// the user log with /api/auth/login
