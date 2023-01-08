@@ -11,7 +11,7 @@ export default function Broot() {
 			socket?.emit("message", value)
 	}
 	useEffect(() => {
-			const newSocket = io("http://10.4.1.5:3001")
+			const newSocket = io("http://10.4.2.5:3001")
 			setSocket(newSocket)
 	}, [setSocket])
 
