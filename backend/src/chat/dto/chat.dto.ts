@@ -6,3 +6,10 @@ export class ChannelDTO {
 	is_private: boolean;
 }
 
+export class UserInChanDTO {
+	token: string;
+	Users: [
+		channel_id: number,
+		username: string,
+	];
+}

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { ChannelDTO } from './dto/chat.dto';
+import { ChannelDTO, UserInChanDTO } from './dto/chat.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -22,5 +22,10 @@ export class ChatController {
 	createChannel(@Body() body: ChannelDTO) {
 		console.log(body);
 		return this.chatService.createChannel(body);
+	}
+
+	@Post('add_users')
+	addusers(@Body() body: UserInChanDTO) {
+		return this.chatService.addUserInChan(body);
 	}
 }

@@ -8,7 +8,7 @@ import { Not, Repository } from 'typeorm';
 import { User } from 'src/typeorm';
 import { ChatProvider } from './chat';
 import { use } from 'passport';
-import { ChannelDTO } from './dto/chat.dto';
+import { ChannelDTO, UserInChanDTO } from './dto/chat.dto';
 
 let jwt = require('jwt-simple');
 
@@ -104,6 +104,19 @@ export class ChatService implements ChatProvider{
 		//			.execute()
 		const chan = this.chanRepo.create(json);
 		return this.chanRepo.save(chan);
+	}
+
+	//JSON TAB ITERATE
+
+	addUserInChan(channel: UserInChanDTO) {
+		let jwt = require('jwt-simple');
+		let secret = process.env.JWT_SECRET;
+		let usernametoken = jwt.decode(channel.token, secret);
+		if (this.chanRepo.findOne({ where: { owner: usernametoken.username}})) {
+			while (channel.Users) {
+				
+			}
+		}
 	}
 
 }

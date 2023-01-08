@@ -7,7 +7,7 @@ export default function Root() {
 	document.cookie = "token_transcandence=" + token;
 	console.log("document.cookie welcome: " + document.cookie)
     function login() {
-        window.location.href='http://10.4.2.5:3001/api/auth/login'
+        window.location.href='http://10.4.1.7:3001/api/auth/login'
     }
     return (
       <>
