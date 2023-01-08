@@ -11,19 +11,15 @@ export class User{
 	@Column()
 	username: string;
 
-	@Column({ nullable: true })
-	avatar: string;
-
 	@Column({ name: 'access_token' })
 	accessToken: string;
 
 	@Column({ name: 'refresh_token' })
 	refreshToken: string;
 
-	@Column({ nullable: true })
-	twoFactorAuthSecret?: string
-
-	@Column({ default: false })
-	public isTwoFactorEnable: boolean
+	@Column({ name: 'emails', nullable: true })
+	emails: string;
 
 }
+
+export default User;

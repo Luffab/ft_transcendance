@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, Post, Put } from '@nestjs/common';
 import { UserDTO } from 'src/users/dto/User.dto';
-import { IUserService } from 'src/users/services/user/user';
+import { IUserService } from 'src/users/user';
 import { UserService } from 'src/users/services/user/user.service';
 
 
@@ -30,5 +30,10 @@ export class UsersController {
 	getUserByUsername(@Param('username') username: string) {
 		const user = this.userService.getUserByUsername(username);
 		return user ? user : {};
+	}
+
+	@Put('avatar')
+	changeAvatar() {
+		
 	}
 }

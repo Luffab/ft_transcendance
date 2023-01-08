@@ -5,4 +5,5 @@ export interface IUserService {
 	getUser();
 	deleteUser();
 	getUserByUsername(username: string): UserDTO | undefined;
+	
 }
