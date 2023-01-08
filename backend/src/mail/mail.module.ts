@@ -7,15 +7,12 @@ import { join } from 'path';
 @Module({
   imports: [
     MailerModule.forRoot({
-      // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
-      // or
       transport: {
-        host: 'smtp.sendgrid.net',
-        secure: true,
-		port: 465,
+        service: 'gmail',
+		secure: false, 
         auth: {
-          user: 'apikey',
-          pass: process.env.SENDGRID_KEY,
+          user: 'fabien.luffab@gmail.com',
+          pass: 'Uyn6tfvk1305*',
         },
       },
       defaults: {

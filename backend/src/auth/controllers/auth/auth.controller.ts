@@ -12,7 +12,7 @@ const parseRequest = require('parse-request');
 export class AuthController {
 	constructor(
 		private readonly authenticationService: AuthService,
-		private usersService: UserService,
+		//private usersService: UserService,
 	  ) {}
 
 	// the user log with /api/auth/login
@@ -49,11 +49,11 @@ export class AuthController {
 
 	  //test
 
-	  @Get('2fa/generate')
-	  @UseGuards(AuthenticatedGuard)
-	  generate(@Req() req: Request) {
-		  let reqq = JSON.parse(JSON.stringify(req.user));
-		  return this.authenticationService.generate2fa(reqq.ft_id, req.user)
-	  }
+	//   @Get('2fa/generate')
+	//   @UseGuards(AuthenticatedGuard)
+	//   generate(@Req() req: Request) {
+	// 	  let reqq = JSON.parse(JSON.stringify(req.user));
+	// 	  return this.authenticationService.generate2fa(reqq.ft_id, req.user)
+	//   }
 }
 

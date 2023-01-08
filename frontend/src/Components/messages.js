@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react"
-
-export default function Messages({messages}) {
+export default function ShowMessage({messageArray}) {
 	return (
 		<div>
-			{messages.map((message, index) => (
-				<div key={index}>MESSAGE: {JSON.stringify(message)}</div>
+			{messageArray.map((message, index) => (
+				<div key={index}>{message.username}: {message.text}</div>
 			))}
 		</div>
 	)
