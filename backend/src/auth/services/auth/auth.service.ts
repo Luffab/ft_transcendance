@@ -38,33 +38,41 @@ export class AuthService implements AuthenticationProvider {
 			return this.createUser(details);
 		}
 
-	createUser(details: UserDetails) {
+	async createUser(details: UserDetails) {
 		console.log('Creating User');
-		//const { ft_id } = details;
+		const { ft_id } = details;
+		const { emails } = details;
 		const user = this.userRepo.create(details);
-		this.userRepo.save(user);
+		this.userRepo
+					.createQueryBuilder()
+					.update(User)
+					.set({ emails: emails[0].value })
+					.where("ft_id= :id", { id: ft_id })
+					.execute()
+		return this.userRepo.save(user);
 	}
 
 	findUser(ft_id: string): Promise<User | undefined> {
 		return this.userRepo.findOne({ where: { ft_id: ft_id } })
 	}
 
-	find2fa(tfa: boolean): Promise<User | undefined> {
-		return this.userRepo.findOne({ where: { is2fa: tfa } })
-	}
-	
-	generate2fa(ft_id: string, user: Partial<User>) {
-		if (this.userRepo.findOne({ where: { is2fa: false } })) {
-			let random = generateRandomString(6);
-			this.mailService.sendUserConfirmation(user.emails, user.username, random);
-			this.userRepo
-    			.createQueryBuilder()
-    			.update(User)
-    			.set({ verify_code: random })
-    			.where("ft_id= :id", { id: ft_id })
-    			.execute()
-		}
-	}
+	//find2fa(tfa: boolean): Promise<User | undefined> {
+	//	return this.userRepo.findOne({ where: { is2fa: tfa } })
+	//}
+	//
+	//async generate2fa(ft_id: string, user: Partial<User>) {
+	//	if (this.userRepo.findOne({ where: { is2fa: false } })) {
+	//		let random = generateRandomString(6);
+	//		console.log(user.emails);
+	//		await this.mailService.sendUserConfirmation(user.emails, user.username, random);
+	//		this.userRepo
+    //			.createQueryBuilder()
+    //			.update(User)
+    //			.set({ verify_code: random })
+    //			.where("ft_id= :id", { id: ft_id })
+    //			.execute()
+	//	}
+	//}
 }
 
 const generateRandomString = (myLength) => {

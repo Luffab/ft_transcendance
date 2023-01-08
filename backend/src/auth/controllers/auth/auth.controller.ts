@@ -49,11 +49,11 @@ export class AuthController {
 
 	  //test
 
-	  @Get('2fa/generate')
-	  @UseGuards(AuthenticatedGuard)
-	  generate(@Req() req: Request) {
-		  let reqq = JSON.parse(JSON.stringify(req.user));
-		  return this.authenticationService.generate2fa(reqq.ft_id, req.user)
-	  }
+	//   @Get('2fa/generate')
+	//   @UseGuards(AuthenticatedGuard)
+	//   generate(@Req() req: Request) {
+	// 	  let reqq = JSON.parse(JSON.stringify(req.user));
+	// 	  return this.authenticationService.generate2fa(reqq.ft_id, req.user)
+	//   }
 }
 
