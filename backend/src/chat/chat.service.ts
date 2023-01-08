@@ -8,6 +8,7 @@ import { Not, Repository } from 'typeorm';
 import { User } from 'src/typeorm';
 import { ChatProvider } from './chat';
 import { use } from 'passport';
+import { ChannelDTO } from './dto/chat.dto';
 
 let jwt = require('jwt-simple');
 
@@ -83,6 +84,26 @@ export class ChatService implements ChatProvider{
 		})
 		console.log(usernametoken.username);
 		return users;
+	}
+
+	createChannel(channel: ChannelDTO) {
+		let jwt = require('jwt-simple');
+		let secret = process.env.JWT_SECRET;
+		let usernametoken = jwt.decode(channel.token, secret);
+		let json = {	"name": channel.channel_name,
+						"password": channel.password,
+						"owner": usernametoken.username,
+						"is_dm": channel.is_dm,
+						"is_private": channel.is_private
+					};
+		console.log(channel.channel_name)
+		//const chann = this.chanRepo
+		//			.createQueryBuilder()
+		//			.update(Channels)
+		//			.set({name: channel.channel_name, password: channel.password, owner: usernametoken.username, is_dm: channel.is_dm, is_private: channel.is_private})
+		//			.execute()
+		const chan = this.chanRepo.create(json);
+		return this.chanRepo.save(chan);
 	}
 
 }

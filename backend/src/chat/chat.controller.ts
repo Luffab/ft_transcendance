@@ -1,5 +1,6 @@
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
+import { ChannelDTO } from './dto/chat.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -15,5 +16,11 @@ export class ChatController {
 	@Get('users')
 	getUsers(@Query() query: { token: string }) {
 		return this.chatService.getAllUsers(query.token);
+	}
+
+	@Post('create')
+	createChannel(@Body() body: ChannelDTO) {
+		console.log(body);
+		return this.chatService.createChannel(body);
 	}
 }
