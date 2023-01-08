@@ -13,17 +13,19 @@ import ShowMessages from "./messages"
 export default function Broot() {
 	const [mySocket, setSocket] = useState();
 	const [messageArray, setMessages] = useState([])
+	//const newSocket = io("http://10.4.1.5:3001")
+	//setSocket(newSocket)
 
 	const sendMessage = (value) => {
 		var message = {
 			jwt: document.cookie,
 			socketId: mySocket.id,
 			text: value,
-			username: "randomUser"
+			username: "default"
 		}
+		console.log("socketId = " + mySocket.id)
 		mySocket?.emit("messageEmitted", message)
 	}
-	console.log("document.cookie " + document.cookie)
 	useEffect(() => {
 			const newSocket = io("http://10.4.1.5:3001")
 			setSocket(newSocket)
