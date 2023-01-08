@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 
-export default function MessageInput({ send }) {
-	const [value, setValue] = useState("")
+export default function MessageInput({ sendFunction }) {
+	const [messageContent, setValue] = useState("")
 	return (
 		<>
 			<input
 				onChange={(e)=>setValue(e.target.value)}
 				placeholder="Type your message..."
-				value={value} />
-			<button onClick={() => send(value)}>Send</button>
+				messageContent={messageContent} />
+			<button onClick={() => sendFunction(messageContent)}>Send</button>
 		</>
 	)
 }

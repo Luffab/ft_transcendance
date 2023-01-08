@@ -1,35 +1,49 @@
 import { useEffect, useState } from "react"
-import io, { Socket } from "socket.io-client"
+import io from "socket.io-client"
 import MessageInput from "./messageInput"
-import Messages from "./messages"
+import ShowMessages from "./messages"
+
+//render() {
+//	const { state } = this.props.location
+//	return (
+//	  // render logic here
+//	)
+//  }
 
 export default function Broot() {
-	const [socket, setSocket] = useState();
-	const [messages, setMessages] = useState([])
+	const [mySocket, setSocket] = useState();
+	const [messageArray, setMessages] = useState([])
 
-	const send = (value) => {
-			socket?.emit("message", value)
+	const sendMessage = (value) => {
+		var message = {
+			jwt: document.cookie,
+			socketId: mySocket.id,
+			text: value,
+			username: "randomUser"
+		}
+		mySocket?.emit("messageEmitted", message)
 	}
+	console.log("document.cookie " + document.cookie)
 	useEffect(() => {
 			const newSocket = io("http://10.4.1.5:3001")
 			setSocket(newSocket)
 	}, [setSocket])
 
-	const messageListener = (message) => {
-		setMessages([...messages, message])
-		console.log(JSON.stringify(messages[0]))
+	const messageListener = (newMessage) => {
+		setMessages([...messageArray, newMessage])
+
 	}
 	useEffect(() => {
-		socket?.on("message", messageListener)
+		mySocket?.on("messageEmitted", messageListener)
 		return () => {
-			socket?.off("message", messageListener)
+			mySocket?.off("messageEmitted", messageListener)
 		}
 	}, [messageListener])
     return (
 		<>
 			{" "}
-			<MessageInput send={send}/>
-			<Messages messages={messages}/>
+			<MessageInput sendFunction={sendMessage}/>
+			<ShowMessages messageArray={messageArray}/>
     	</>
     );
 }

@@ -19,6 +19,7 @@ reportWebVitals();
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { useState } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 /* existing imports */
 import Welcome from "./Components/welcome";
@@ -31,15 +32,16 @@ import Settings from "./Components/settings";
 import Chat from "./Components/chat";
 
 const router = createBrowserRouter([
-    {path: "/",element: <Welcome />,},
+	{path: "/",element: <Welcome />,},
     {path: "/home",element: <Home />,},
-    //{path: "/login",element: <Login />,},
+    {path: "/login",element: <Login />,},
     {path: "/get_code",element: <Bonjour />,},
     {path: "/update_profil",element: <Update_profil />,},
     {path: "/chat",element: <Chat />,},
     {path: "/stats_and_match_history",element: <Bonjour />,},
     {path: "/game",element: <Game />,},
-  ]);
+]);
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

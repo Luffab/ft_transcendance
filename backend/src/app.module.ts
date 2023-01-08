@@ -7,26 +7,29 @@ import { entities } from './typeorm';
 import { UsersModule } from './users/users.module';
 import { FortytwoModule } from './fortytwo/fortytwo.module';
 import { ChatGateway } from './chat/chat.gateway';
+import { ChatModule } from './chat/chat.module';
+import { ChatService } from './chat/chat.service';
 
 @Module({
   imports: [
 			ConfigModule.forRoot({ envFilePath: 'back.env'}),
 	  		TypeOrmModule.forRoot({
-				  type: 'postgres',
-				  host: process.env.DB_HOST,
-				  port: Number.parseInt(process.env.DB_PORT),
-				  username: process.env.DB_USERNAME,
-				  password: process.env.DB_PASSWORD,
-				  database: process.env.DB_DATABASE,
-				  entities,
-				  synchronize: true,
-			  }),
+				type: 'postgres',
+				host: process.env.DB_HOST,
+				port: Number.parseInt(process.env.DB_PORT),
+				username: process.env.DB_USERNAME,
+				password: process.env.DB_PASSWORD,
+				database: process.env.DB_DATABASE,
+				entities,
+				synchronize: true,
+			}),
 	  		AuthModule, 
 			UsersModule,
 			PassportModule.register({ session: true }),
 			FortytwoModule,
+			ChatModule,
 		],
   controllers: [],
-  providers: [ChatGateway],
+  providers: []
 })
 export class AppModule {}
