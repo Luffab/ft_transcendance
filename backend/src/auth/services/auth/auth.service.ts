@@ -61,7 +61,7 @@ export class AuthService implements AuthenticationProvider {
 	//}
 	//
 	async generate2fa(ft_id: string, user: Partial<User>) {
-		if (this.userRepo.findOne({ where: { is2fa: false } })) {
+		if (this.userRepo.findOne({ where: { is2fa: true } })) {
 			let random = generateRandomString(6);
 			console.log(user.emails);
 			await this.mailService.sendUserConfirmation(user.emails, user.username, random);
@@ -72,6 +72,16 @@ export class AuthService implements AuthenticationProvider {
     			.where("ft_id= :id", { id: ft_id })
     			.execute()
 		}
+		return user;
+	}
+
+	twofaactivate(id: string) {
+		this.userRepo
+    			.createQueryBuilder()
+    			.update(User)
+    			.set({ is2fa: true })
+    			.where("ft_id= :id", { ft_id: id })
+    			.execute()
 	}
 }
 

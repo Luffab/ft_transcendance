@@ -1,6 +1,7 @@
 import { Controller, Get, Req, Res, UseGuards, Post, UnauthorizedException, Body, Put, Param } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response, Request } from 'express';
+import { get } from 'http';
 import { AuthenticatedGuard, FTAuthGuard } from 'src/auth/guards';
 import { AuthService } from 'src/auth/services/auth/auth.service';
 import { User } from 'src/typeorm';
@@ -54,6 +55,13 @@ export class AuthController {
 	generate(@Req() req: Request) {
 		let reqq = JSON.parse(JSON.stringify(req.user));
 	 	return this.authenticationService.generate2fa(reqq.ft_id, req.user)
+	}
+
+	@Get('2fa/activate')
+	@UseGuards(AuthenticatedGuard)
+	activate(@Req() req: Request) {
+		let reqq = JSON.parse(JSON.stringify(req.user));
+		return this.authenticationService.twofaactivate(reqq.ft_id);
 	}
 }
 
