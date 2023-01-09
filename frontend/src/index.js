@@ -31,12 +31,12 @@ import Update_profil from "./Components/update_profil";
 import Settings from "./Components/settings";
 import Chat from "./Components/chat";
 
-const socket = io('http://10.4.2.5:3001', {
+const my_ip = "10.4.2.5";
+const socket = io(my_ip, {
   transports: ['websocket'], 
   upgrade: false
 });
 
-const my_ip = "10.4.2.5";
 const router = createBrowserRouter([
 	{path: "/",element: <Welcome my_ip={my_ip}/>,},
     {path: "/home",element: <Home my_ip={my_ip} />,},
