@@ -31,7 +31,7 @@ services:
     ports:
       - 3001:3001
     volumes:
-      - ./backend:/app
+      - ./backend/src:/app/src
     depends_on:
       - postgres
   front:
@@ -41,7 +41,7 @@ services:
     ports:
      - 3000:3000
     volumes:
-      - ./frontend:/usr/src/app/my-app
+      - ./frontend/src:/usr/src/app/my-app/src
     depends_on:
      - postgres
 

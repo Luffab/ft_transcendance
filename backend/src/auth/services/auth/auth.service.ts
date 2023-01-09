@@ -60,19 +60,29 @@ export class AuthService implements AuthenticationProvider {
 	//	return this.userRepo.findOne({ where: { is2fa: tfa } })
 	//}
 	//
-	//async generate2fa(ft_id: string, user: Partial<User>) {
-	//	if (this.userRepo.findOne({ where: { is2fa: false } })) {
-	//		let random = generateRandomString(6);
-	//		console.log(user.emails);
-	//		await this.mailService.sendUserConfirmation(user.emails, user.username, random);
-	//		this.userRepo
-    //			.createQueryBuilder()
-    //			.update(User)
-    //			.set({ verify_code: random })
-    //			.where("ft_id= :id", { id: ft_id })
-    //			.execute()
-	//	}
-	//}
+	async generate2fa(ft_id: string, user: Partial<User>) {
+		if (this.userRepo.findOne({ where: { is2fa: true } })) {
+			let random = generateRandomString(6);
+			console.log(user.emails);
+			await this.mailService.sendUserConfirmation(user.emails, user.username, random);
+			this.userRepo
+    			.createQueryBuilder()
+    			.update(User)
+    			.set({ verify_code: random })
+    			.where("ft_id= :id", { id: ft_id })
+    			.execute()
+		}
+		return user;
+	}
+
+	twofaactivate(id: string) {
+		this.userRepo
+    			.createQueryBuilder()
+    			.update(User)
+    			.set({ is2fa: true })
+    			.where("ft_id= :id", { ft_id: id })
+    			.execute()
+	}
 }
 
 const generateRandomString = (myLength) => {

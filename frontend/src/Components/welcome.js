@@ -16,7 +16,7 @@ export default function Root() {
   			  pathname: "/chat",
   			  state: token
   			}}
-		>link</Link>
+		>Chat</Link>
       </>
     );
   }

@@ -12,8 +12,8 @@ export class MailService {
 
   async sendUserConfirmation(mail: string, username: string, code: string) {
     return await this.mailerService.sendMail({
-      to: "fttranscendance42@gmail.com",
-      from: "fatilly@student.42lyon.fr", // override default from
+      to: mail,
+      from: "fttranscendance42@gmail.com", // override default from
       subject: 'Ton code de verification est la !',
       template: './confirmation', // `.hbs` extension is appended automatically
       context: { // ✏️ filling curly brackets with content

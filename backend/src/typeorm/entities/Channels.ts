@@ -8,17 +8,14 @@ export class Channels {
 	@Column()
 	name: string;
 
-	@Column()
+	@Column({nullable: true})
 	password: string;
 
 	@Column()
-	owner: string;
+	owner_id: string;
 
 	@Column()
-	is_dm: boolean;
-
-	@Column()
-	is_private: boolean;
+	channel_type: string;
 }
 
 export default Channels;

@@ -36,8 +36,6 @@ const socket = io('http://10.4.1.5:3001', {
   transports: ['websocket'], 
   upgrade: false
 });
-console.log("socket = " + socket.id)
-socket?.emit("onConnection", document.cookie, socket.id)
 
 const router = createBrowserRouter([
 	{path: "/",element: <Welcome />,},

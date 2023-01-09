@@ -22,6 +22,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('messageEmitted')
 	async sendMessage(@MessageBody() messageContent: MessageDto) {
 		console.log("\n\n------------------------------- NEW MESSAGE -------------------------------\n")
+
 		const newMessage = await this.chatService.createMessage(messageContent);
 		this.chatService.addSocketsToUsername(newMessage.username, newMessage.socketId)
 		console.log("sendMessage in ChatGateway :\n" + newMessage.username + ": " + newMessage.text);
@@ -32,9 +33,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		return newMessage;
 	}
 	
-	@SubscribeMessage('onConnection')
-	async handleConnection(@MessageBody() jwt: string, sockeId: string) {
-		
+	handleConnection(client: Socket) {
+		console.log(`Client connected: ${client.id}`);
 	}
 
 	handleDisconnect(client: Socket) {

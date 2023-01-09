@@ -20,6 +20,12 @@ export class User{
 	@Column({ name: 'emails', nullable: true })
 	emails: string;
 
+	@Column({ default: null})
+	is2fa: boolean;
+
+	@Column({ nullable: true })
+	verify_code: string;
+
 }
 
 export default User;

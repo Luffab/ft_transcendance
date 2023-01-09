@@ -4,8 +4,12 @@ WORKDIR /app
 #COPY ["package.json", "package-lock*", "./"]
 
 FROM base as dev
-#RUN npm ci
-#COPY . .
+
+COPY package.json .
+COPY tsconfig.json .
+COPY entry.sh .
+
+RUN npm i
 ENTRYPOINT [ "bash", "entry.sh" ]
 
 #FROM base as prod

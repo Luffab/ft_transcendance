@@ -8,11 +8,11 @@ import { join } from 'path';
   imports: [
     MailerModule.forRoot({
       transport: {
-        service: 'gmail',
-		secure: false, 
+        host: 'mail.smtp2go.com',
+		port: 2525,
         auth: {
-          user: 'fabien.luffab@gmail.com',
-          pass: 'Uyn6tfvk1305*',
+          user: 'verifyuser',
+          pass: 'qXwB4fYx4Olpttt0',
         },
       },
       defaults: {

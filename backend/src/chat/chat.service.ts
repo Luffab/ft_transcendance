@@ -8,7 +8,7 @@ import { Not, Repository } from 'typeorm';
 import { User } from 'src/typeorm';
 import { ChatProvider } from './chat';
 import { use } from 'passport';
-import { ChannelDTO } from './dto/chat.dto';
+import { ChannelDTO, UserInChanDTO } from './dto/chat.dto';
 
 let jwt = require('jwt-simple');
 
@@ -82,22 +82,23 @@ export class ChatService implements ChatProvider{
 	//	return this.messageArray;
 	//}
 
-	getAllChannels(token: string) {
+	async getAllChannels(token: string) {
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(token, secret);
 		const chanid = this.userinchan.chanid;
-		if (this.userinchanRepo.findOne({ where: { username: usernametoken }})) {
-			const chan = (this.chanRepo.findBy({ id: chanid }))
-			//console.log(chan)
-			return (chan);
-		}
+		const channels = await this.chanRepo.find({
+			where : [
+				{ channel_type: "public" },
+				{ channel_type: "password" }
+			]
+		});
+		return channels;
 	}
 
 	async getAllUsers(token: string) {
 		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(token, secret);
-		//let tokenn = JSON.parse(usernametoken);
 		const users = await this.userRepo.findBy({
 			username: Not(usernametoken.username),
 		})
@@ -109,20 +110,41 @@ export class ChatService implements ChatProvider{
 		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(channel.token, secret);
+		console.log(usernametoken.ft_id);
 		let json = {	"name": channel.channel_name,
 						"password": channel.password,
-						"owner": usernametoken.username,
-						"is_dm": channel.is_dm,
-						"is_private": channel.is_private
+						"owner_id": usernametoken.ft_id,
+						"channel_type": channel.channel_type
 					};
-		//console.log(channel.channel_name)
-		//const chann = this.chanRepo
-		//			.createQueryBuilder()
-		//			.update(Channels)
-		//			.set({name: channel.channel_name, password: channel.password, owner: usernametoken.username, is_dm: channel.is_dm, is_private: channel.is_private})
-		//			.execute()
 		const chan = this.chanRepo.create(json);
+		let adduser = {	"user_id": usernametoken.ft_id,
+						"chan_id": chan.id,
+						"is_owner": true,
+						"isadmin": true
+					};
+		const addusers = this.userinchanRepo.create(adduser);
+		this.userinchanRepo.save(addusers);
 		return this.chanRepo.save(chan);
 	}
 
+	//JSON TAB ITERATE
+
+	addUserInChan(channel: UserInChanDTO) {
+		let jwt = require('jwt-simple');
+		let secret = process.env.JWT_SECRET;
+		let usernametoken = jwt.decode(channel.token, secret);
+		if (this.userinchanRepo.findOne({ where: { is_admin: true, chanid: channel.channel_id, user_id: usernametoken.ft_id }})) {
+			if (channel.Users[0])
+			{
+			channel.Users.map((user, i) => {
+				let json = {	"user_id": user.user_id,
+						"chanid": channel.channel_id,
+						"username": user.username
+					};
+					const chan = this.userinchanRepo.create(json);
+					this.userinchanRepo.save(chan);
+			});
+			}
+		}
+	}
 }
