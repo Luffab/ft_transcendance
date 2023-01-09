@@ -35,7 +35,7 @@ export class AuthController {
 		let payload = {
 			username: reqq.username,
 			is2fa: reqq.is2fa,
-			id: reqq.ft_id
+			ft_id: reqq.ft_id
 		};
 		let token = jwt.encode(payload, secret);
 		console.log(token);

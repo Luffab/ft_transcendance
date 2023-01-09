@@ -91,6 +91,7 @@ export class ChatService implements ChatProvider{
 		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(channel.token, secret);
+		console.log(usernametoken.ft_id);
 		let json = {	"name": channel.channel_name,
 						"password": channel.password,
 						"owner_id": usernametoken.ft_id,
