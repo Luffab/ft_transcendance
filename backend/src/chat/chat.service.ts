@@ -9,6 +9,7 @@ import { User } from 'src/typeorm';
 import { ChatProvider } from './chat';
 import { use } from 'passport';
 import { ChannelDTO, UserInChanDTO } from './dto/chat.dto';
+import { channel } from 'diagnostics_channel';
 
 let jwt = require('jwt-simple');
 
@@ -66,15 +67,23 @@ export class ChatService implements ChatProvider{
 	async getAllChannels(token: string) {
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(token, secret);
-		const chanid = this.userinchan.chanid;
-		const channels = await this.chanRepo.find({
+		let user = await this.userinchanRepo.find({
+			select: {chanid: true},
+			where: { user_id: usernametoken.ft_id }
+		})
+		let reqq = JSON.parse(JSON.stringify(user));
+		//console.log(reqq.UserinChan.chanid);
+		console.log(user[0])
+		let channels = await this.chanRepo.find({
 			where : [
 				{ channel_type: "public" },
-				{ channel_type: "password" }
+				{ channel_type: "password" },
+				{ channel_type: "private", id: user[0].chanid}
 			]
 		});
 		return channels;
 	}
+
 
 	async getAllUsers(token: string) {
 		let jwt = require('jwt-simple');
@@ -83,7 +92,6 @@ export class ChatService implements ChatProvider{
 		const users = await this.userRepo.findBy({
 			username: Not(usernametoken.username),
 		})
-		console.log(usernametoken.username);
 		return users;
 	}
 
@@ -91,7 +99,6 @@ export class ChatService implements ChatProvider{
 		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(channel.token, secret);
-		console.log(usernametoken.ft_id);
 		let json = {	"name": channel.channel_name,
 						"password": channel.password,
 						"owner_id": usernametoken.ft_id,
@@ -118,13 +125,13 @@ export class ChatService implements ChatProvider{
 		if (this.userinchanRepo.findOne({ where: { is_admin: true, chanid: channel.channel_id, user_id: usernametoken.ft_id }})) {
 			if (channel.Users[0])
 			{
-			channel.Users.map((user, i) => {
+				channel.Users.map((user, i) => {
 				let json = {	"user_id": user.user_id,
 						"chanid": channel.channel_id,
 						"username": user.username
 					};
 					const chan = this.userinchanRepo.create(json);
-					this.userinchanRepo.save(chan);
+					return this.userinchanRepo.save(chan);
 			});
 			}
 		}
