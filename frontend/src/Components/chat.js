@@ -6,7 +6,7 @@ import axios from 'axios'
 
 let tab=["1", "1", "1", "1", "1", "1"]
 
-export default function Broot() {
+export default function Broot({socket, my_ip}) {
 	const [mySocket, setSocket] = useState();
 	const [messageArray, setMessages] = useState([])
 	const [channels, setChannels] = useState([{"channel_name": "1", "nb_unread_msg":3, "last_msg":"Bonjour 1"}])
@@ -26,16 +26,17 @@ export default function Broot() {
 			jwt: document.cookie,
 			socketId: mySocket.id,
 			text: value,
-			username: "randomUser"
+			username: "default"
 		}
+		//console.log("socketId = " + mySocket.id)
 		mySocket?.emit("messageEmitted", message)
 	}
-	console.log("document.cookie " + document.cookie)
 	useEffect(() => {
-		const newSocket = io("http://10.4.2.5:3001")
-		setSocket(newSocket)
+		//const newSocket = io("http://10.4.1.5:3001")
+		setSocket(socket)
+		setChannels([...channels, {"channel_name": "2", "nb_unread_msg":3, "last_msg":"Bonjour 1"}])
 		setMessages_list([...messages_list, {"username": "gmadec", "message":"Bonjour tt le monde"}])
-		let url='http://10.4.1.7:3001/api/chat/channels?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
+		let url='http://'+my_ip+':3001/api/chat/channels?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
 		//let url='http://10.4.2.5:3001/api/chat/channels?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
 		axios.get(url)
 		.then(res => {
@@ -65,8 +66,8 @@ export default function Broot() {
 	}, [messageListener])
 
 	const getAll_other_users = () => {
-		let url='http://10.4.1.7:3001/api/chat/users?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
-		//let url='http://10.4.2.5:3001/api/chat/users?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
+
+		let url='http://'+my_ip+':3001/api/chat/users?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyJ9.6VGR74ngyseMVgWBIowXFRUrUPBPEiWNcIX5_FEqTrw'
 		axios.get(url)
 		.then(res => {
 		  console.log(res.data);
@@ -82,7 +83,7 @@ export default function Broot() {
 	}
 
 	const create_channel = () => {
-		let url='http://10.4.1.7:3001/api/chat/create'
+		let url='http://'+my_ip+':3001/api/chat/create'
 		//let url='http://10.4.2.5:3001/api/chat/create'
 
 		axios.post(url,{
@@ -99,7 +100,7 @@ export default function Broot() {
 	}
 
 	const add_user_in_channel = () => {
-		let url='http://10.4.1.7:3001/api/chat/add_users'
+		let url='http://'+my_ip+':3001/api/chat/add_users'
 		//let url='http://10.4.2.5:3001/api/chat/add_users'
 
 		axios.post(url,{

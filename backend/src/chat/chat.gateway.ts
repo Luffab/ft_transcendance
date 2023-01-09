@@ -1,27 +1,49 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect,} from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { MessageDto } from './dto/message.dto';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
 	cors: {
 		origine: '*',
 	},
 })
-export class ChatGateway {
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer()
 	server: Server;
 
 	constructor(private readonly chatService: ChatService) {}
 
+	//socketByUsername = {
+	//	username: "",
+	//	socketIds: [],
+	//};
+
 	@SubscribeMessage('messageEmitted')
 	async sendMessage(@MessageBody() messageContent: MessageDto) {
+		console.log("\n\n------------------------------- NEW MESSAGE -------------------------------\n")
+
 		const newMessage = await this.chatService.createMessage(messageContent);
-		console.log("sendMessage in ChatGateway :\n" + newMessage.username + ": " + newMessage.text + "\n");
+		this.chatService.addSocketsToUsername(newMessage.username, newMessage.socketId)
+		console.log("sendMessage in ChatGateway :\n" + newMessage.username + ": " + newMessage.text);
+		//console.log("sockets[" + newMessage.username + "] =")
+		this.chatService.getSocketsByUsername(newMessage.username)
 		this.server.emit('messageEmitted', newMessage);
 
 		return newMessage;
 	}
+	
+	handleConnection(client: Socket) {
+		console.log(`Client connected: ${client.id}`);
+	}
+
+	handleDisconnect(client: Socket) {
+		console.log(`Client disconnected: ${client.id}`);
+	}
+	  
+	//handleConnection(client: Socket, ...args: any[]) {
+	//	console.log(`Client connected: ${client.id}`);
+	//}
 
 	//@SubscribeMessage('findAllMessages')
 	//findAll() {

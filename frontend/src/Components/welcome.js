@@ -1,14 +1,12 @@
 import { Link } from "react-router-dom";
 
-export default function Root() {
+export default function Root({my_ip}) {
 	const queryParameters = new URLSearchParams(window.location.search)
     let token = queryParameters.get("jwt");
-	console.log("token = " + token);
 	document.cookie = "token_transcandence=" + token;
-	console.log("document.cookie welcome: " + document.cookie)
     function login() {
-        //window.location.href='http://10.4.2.5:3001/api/auth/login'
-        window.location.href='http://10.4.1.7:3001/api/auth/login'
+        window.location.href='http://'+my_ip+':3001/api/auth/login'
+        //window.location.href='http://10.4.1.7:3001/api/auth/login'
     }
     return (
       <>
@@ -19,7 +17,7 @@ export default function Root() {
   			  pathname: "/chat",
   			  state: token
   			}}
-		>link</Link>
+		>Chat</Link>
       </>
     );
   }

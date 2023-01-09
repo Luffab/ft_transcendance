@@ -9,6 +9,14 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { TypeormStore } from 'connect-typeorm';
 
 async function bootstrap() {
+	console.log( {
+		username: process.env.POSTGRES_USER,
+				password: process.env.POSTGRES_PASSWORD,
+				database: process.env.POSTGRES_DB,
+
+	}
+	);
+	
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
   app.use(session({

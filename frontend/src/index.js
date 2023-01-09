@@ -19,8 +19,8 @@ reportWebVitals();
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { useState } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import io from "socket.io-client"
 /* existing imports */
 import Welcome from "./Components/welcome";
 import Login from "./Components/login";
@@ -31,15 +31,21 @@ import Update_profil from "./Components/update_profil";
 import Settings from "./Components/settings";
 import Chat from "./Components/chat";
 
+const socket = io('http://10.4.2.5:3001', {
+  transports: ['websocket'], 
+  upgrade: false
+});
+
+const my_ip = "10.4.2.5";
 const router = createBrowserRouter([
-	{path: "/",element: <Welcome />,},
-    {path: "/home",element: <Home />,},
-    {path: "/login",element: <Login />,},
-    {path: "/get_code",element: <Bonjour />,},
-    {path: "/update_profil",element: <Update_profil />,},
-    {path: "/chat",element: <Chat />,},
-    {path: "/stats_and_match_history",element: <Bonjour />,},
-    {path: "/game",element: <Game />,},
+	{path: "/",element: <Welcome my_ip={my_ip}/>,},
+    {path: "/home",element: <Home my_ip={my_ip} />,},
+    {path: "/login",element: <Login my_ip={my_ip} />,},
+    {path: "/get_code",element: <Bonjour my_ip={my_ip} />,},
+    {path: "/update_profil",element: <Update_profil my_ip={my_ip} />,},
+    {path: "/chat",element: <Chat socket={socket} my_ip={my_ip}/>,},
+    {path: "/stats_and_match_history",element: <Bonjour my_ip={my_ip} />,},
+    {path: "/game",element: <Game my_ip={my_ip} />,},
 ]);
 
 

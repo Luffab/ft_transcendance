@@ -2,7 +2,7 @@ import {useParams, redirect, Navigate} from "react-router-dom";
 import axios from 'axios'
 
 
-export default function Root() {
+export default function Root({my_ip}) {
     //let { code } = useParams();
 
 

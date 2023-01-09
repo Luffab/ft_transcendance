@@ -20,7 +20,7 @@ export class ChatController {
 
 	@Post('create')
 	createChannel(@Body() body: ChannelDTO) {
-		console.log(body);
+		//console.log(body);
 		return this.chatService.createChannel(body);
 	}
 

@@ -32,14 +32,14 @@ export class AuthService implements AuthenticationProvider {
 					.set({ emails: emails[0].value })
 					.where("ft_id= :id", { id: ft_id })
 					.execute()
-				console.log('User updated');
+				console.log('\nUser updated\n');
 				return user;
 			}
 			return this.createUser(details);
 		}
 
 	async createUser(details: UserDetails) {
-		console.log('Creating User');
+		console.log('\nCreating User\n');
 		const { ft_id } = details;
 		const { emails } = details;
 		const user = this.userRepo.create(details);
