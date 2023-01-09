@@ -87,7 +87,7 @@ export class ChatService implements ChatProvider{
 		return users;
 	}
 
-	createChannel(channel: ChannelDTO) {
+	async createChannel(channel: ChannelDTO) {
 		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(channel.token, secret);
@@ -97,15 +97,16 @@ export class ChatService implements ChatProvider{
 						"owner_id": usernametoken.ft_id,
 						"channel_type": channel.channel_type
 					};
-		const chan = this.chanRepo.create(json);
+		const chan = await this.chanRepo.create(json);
+		const chann = await this.chanRepo.save(chan);
 		let adduser = {	"user_id": usernametoken.ft_id,
-						"chan_id": chan.id,
-						"is_owner": true,
-						"isadmin": true
+						"chanid": chann.id,
+						"username": usernametoken.username,
+						"isowner": true,
+						"is_admin": true
 					};
 		const addusers = this.userinchanRepo.create(adduser);
-		this.userinchanRepo.save(addusers);
-		return this.chanRepo.save(chan);
+		return this.userinchanRepo.save(addusers);
 	}
 
 	//JSON TAB ITERATE
