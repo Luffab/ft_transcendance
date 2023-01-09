@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @Entity({name: 'usersinchan' })
 export class UsersInChan {
 	@PrimaryGeneratedColumn()
-	id: Number;
+	id: number;
 
 	@Column()
 	user_id: string;
@@ -15,10 +15,10 @@ export class UsersInChan {
 	@Column()
 	username: string;
 
-	@Column()
+	@Column({ default: false})
 	isowner: boolean;
 
-	@Column()
+	@Column({ default: false})
 	is_admin: boolean;
 }
 
