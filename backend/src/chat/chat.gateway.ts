@@ -14,35 +14,36 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	constructor(private readonly chatService: ChatService) {}
 
-	socketByUsername = {
-		username: "",
-		socketIds: [],
-	};
+	//socketByUsername = {
+	//	username: "",
+	//	socketIds: [],
+	//};
 
 	@SubscribeMessage('messageEmitted')
 	async sendMessage(@MessageBody() messageContent: MessageDto) {
-		this.socketByUsername = this.chatService.addSocketsToUsername(this.socketByUsername, messageContent.username, messageContent.socketId)
+		console.log("\n\n------------------------------- NEW MESSAGE -------------------------------\n")
 		const newMessage = await this.chatService.createMessage(messageContent);
-		console.log("sendMessage in ChatGateway :\n" + newMessage.username + ": " + newMessage.text + "\n" + "sockets[" + messageContent.username + "]");
-		//this.socketByUsername = this.chatService.getSocketsByUsername(messageContent.username)
-		console.log(this.socketByUsername.socketIds)
+		this.chatService.addSocketsToUsername(newMessage.username, newMessage.socketId)
+		console.log("sendMessage in ChatGateway :\n" + newMessage.username + ": " + newMessage.text);
+		//console.log("sockets[" + newMessage.username + "] =")
+		this.chatService.getSocketsByUsername(newMessage.username)
 		this.server.emit('messageEmitted', newMessage);
 
 		return newMessage;
 	}
-
-	test() {
-		console.log("heyyyy");
+	
+	@SubscribeMessage('onConnection')
+	async handleConnection(@MessageBody() jwt: string, sockeId: string) {
+		
 	}
-	  
+
 	handleDisconnect(client: Socket) {
 		console.log(`Client disconnected: ${client.id}`);
 	}
 	  
-	handleConnection(client: Socket, ...args: any[]) {
-		console.log("salut");
-		console.log(`Client connected: ${client.id}`);
-	}
+	//handleConnection(client: Socket, ...args: any[]) {
+	//	console.log(`Client connected: ${client.id}`);
+	//}
 
 	//@SubscribeMessage('findAllMessages')
 	//findAll() {

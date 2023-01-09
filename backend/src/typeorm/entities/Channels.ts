@@ -5,13 +5,13 @@ export class Channels {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column({ unique: true })
+	@Column()
 	name: string;
 
 	@Column()
 	password: string;
 
-	@Column({ nullable: true })
+	@Column()
 	owner: string;
 
 	@Column()

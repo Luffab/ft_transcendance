@@ -2,10 +2,11 @@ FROM node:latest
 
 WORKDIR /usr/src/app/my-app
 
-COPY . .
+#COPY . .
 
-RUN npm install
+#RUN npm install
 
 EXPOSE 3000
+ENTRYPOINT [ "bash", "entry.sh" ]
 
-CMD ["npm", "start"]
+#CMD ["npm", "start"]

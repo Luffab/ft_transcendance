@@ -5,7 +5,7 @@ export default function Root() {
     let token = queryParameters.get("jwt");
 	document.cookie = "token_transcandence=" + token;
     function login() {
-        window.location.href='http://10.4.1.5:3001/api/auth/login'		
+        window.location.href='http://10.4.1.5:3001/api/auth/login'
     }
     return (
       <>
