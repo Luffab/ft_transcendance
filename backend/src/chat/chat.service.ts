@@ -97,6 +97,13 @@ export class ChatService implements ChatProvider{
 						"channel_type": channel.channel_type
 					};
 		const chan = this.chanRepo.create(json);
+		let adduser = {	"user_id": usernametoken.ft_id,
+						"chan_id": chan.id,
+						"is_owner": true,
+						"isadmin": true
+					};
+		let addusers = this.userinchanRepo.create(adduser);
+		this.userinchanRepo.save(addusers);
 		return this.chanRepo.save(chan);
 	}
 
@@ -125,6 +132,12 @@ export class ChatService implements ChatProvider{
 
 			}
 		}
+	}
+
+	addOwnerInChan(token: string) {
+		let jwt = require('jwt-simple');
+		let secret = process.env.JWT_SECRET;
+		let usernametoken = jwt.decode(channel.token, secret);
 	}
 
 }
