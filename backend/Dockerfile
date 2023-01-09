@@ -1,16 +1,20 @@
 FROM node:latest as base
 
 WORKDIR /app
-COPY ["package.json", "package-lock*", "./"]
+#COPY ["package.json", "package-lock*", "./"]
 
 FROM base as dev
-RUN npm ci
-COPY . .
-CMD ["npm", "run", "start:dev"]
 
-FROM base as prod
-RUN npm ci
-COPY . .
-RUN npm i -g @nestjs/cli
-RUN npm run build
-CMD ["npm", "run", "start:prod"]
+COPY package.json .
+COPY tsconfig.json .
+COPY entry.sh .
+
+RUN npm i
+ENTRYPOINT [ "bash", "entry.sh" ]
+
+#FROM base as prod
+#RUN npm ci
+#COPY . .
+#RUN npm i -g @nestjs/cli
+#RUN npm run build
+#CMD ["npm", "run", "start:prod"]

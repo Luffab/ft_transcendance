@@ -22,16 +22,36 @@ export class ChatService implements ChatProvider{
 		private userinchan: UsersInChan,
 	) {}
 	//messageArray: Message[] = [{ name: 'Damien', text: 'prout' }]
-	userById = {};
+	//socketByUsername = {username: };
+	socketByUsername = {
+		username: "",
+		socketIds: [],
+	};
 
-	addUserToId(userName: string, userId: string) {
-		this.userById[userId] = userName;
-
-		return Object.values(this.userById);
+	addSocketsToUsername(username: string, newSocketId: string) {
+		console.log("addSocketsToUsername in ChatService :");
+		console.log("newSocketId = " + newSocketId);
+		let tab = this.socketByUsername[username];
+		if (!tab || ((tab.includes(newSocketId)) === false)) {
+			console.log("sockets[" + username + "] before fragmentation =");
+			console.log(tab);
+			if (!tab)
+				this.socketByUsername[username] = [newSocketId];
+			else
+				this.socketByUsername[username] = [...tab, newSocketId];
+			console.log("sockets[" + username + "] after fragmentation =");
+			console.log(this.socketByUsername[username]);
+		}
+		console.log("final sockets[" + username + "] =");
+		console.log(this.socketByUsername[username] + "\n");
+		//return this.socketByUsername;
 	}
 
-	getUserById(userId: string) {
-		return this.userById[userId];
+	getSocketsByUsername(username: string) {
+		console.log("getSocketsByUsername in ChatService :")
+		console.log("sockets[" + username + "] =")
+		console.log(this.socketByUsername[username])
+		return this.socketByUsername[username];
 	}
 
 	//createMessage(createMessageDto: MessageDto) {
@@ -49,13 +69,12 @@ export class ChatService implements ChatProvider{
 
 	createMessage(messageContent: MessageDto) {
 		console.log("createMessage in ChatService :");
-		console.log("jwt = " + messageContent.jwt.split("=")[1]);
+		let test = messageContent.jwt.split("=")[1]
 		console.log("socket = " + messageContent.socketId);
-		console.log("content = " + messageContent.text);
 		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
-		let token = jwt.decode(messageContent.jwt.split("=")[1], secret);
-		messageContent.username = token;
+		let token = jwt.decode(test, secret);
+		messageContent.username = token.username;
 		console.log("username = " + messageContent.username + "\n");
 		return messageContent;
   	}
@@ -92,6 +111,7 @@ export class ChatService implements ChatProvider{
 		const users = await this.userRepo.findBy({
 			username: Not(usernametoken.username),
 		})
+		//console.log(usernametoken.username);
 		return users;
 	}
 

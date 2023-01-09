@@ -38,7 +38,7 @@ export class AuthController {
 			ft_id: reqq.ft_id
 		};
 		let token = jwt.encode(payload, secret);
-		console.log(token);
+		//console.log(token);
 		res.redirect(process.env.FT_REDIRECT_URL + "?jwt=" + token);
 	}
 

@@ -21,6 +21,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { useState } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import io from "socket.io-client"
 /* existing imports */
 import Welcome from "./Components/welcome";
 import Login from "./Components/login";
@@ -31,13 +32,18 @@ import Update_profil from "./Components/update_profil";
 import Settings from "./Components/settings";
 import Chat from "./Components/chat";
 
+const socket = io('http://10.4.1.5:3001', {
+  transports: ['websocket'], 
+  upgrade: false
+});
+
 const router = createBrowserRouter([
 	{path: "/",element: <Welcome />,},
     {path: "/home",element: <Home />,},
     {path: "/login",element: <Login />,},
     {path: "/get_code",element: <Bonjour />,},
     {path: "/update_profil",element: <Update_profil />,},
-    {path: "/chat",element: <Chat />,},
+    {path: "/chat",element: <Chat socket={socket}/>,},
     {path: "/stats_and_match_history",element: <Bonjour />,},
     {path: "/game",element: <Game />,},
 ]);

@@ -19,15 +19,15 @@ import UsersInChan from './typeorm/entities/UserinChan';
 
 @Module({
   imports: [
-			ConfigModule.forRoot({ envFilePath: 'back.env'}),
+			ConfigModule.forRoot({ envFilePath: '../../.env'}),
 	  		TypeOrmModule.forRoot({
 				type: 'postgres',
-				host: process.env.DB_HOST,
-				port: Number.parseInt(process.env.DB_PORT),
-				username: process.env.DB_USERNAME,
-				password: process.env.DB_PASSWORD,
-				database: process.env.DB_DATABASE,
-				entities: [User, Channels, Messages, UsersInChan],
+				host: 'postgres',
+				username: process.env.POSTGRES_USER,
+				password: process.env.POSTGRES_PASSWORD,
+				database: process.env.POSTGRES_DB,
+				//entities: [User, Channels, Messages, UsersInChan],
+				autoLoadEntities: true,
 				synchronize: true,
 			}),
 	  		AuthModule, 
@@ -37,7 +37,7 @@ import UsersInChan from './typeorm/entities/UserinChan';
 			ChatModule,
 			MailModule,
 		],
-  controllers: [],
+  controllers: [], 
   providers: []
 })
 export class AppModule {}
