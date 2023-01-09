@@ -34,7 +34,9 @@ export class AuthController {
 		let secret = process.env.JWT_SECRET;
 		let payload = {
 			username: reqq.username,
-			is2fa: reqq.is2fa };
+			is2fa: reqq.is2fa,
+			id: reqq.ft_id
+		};
 		let token = jwt.encode(payload, secret);
 		console.log(token);
 		res.redirect(process.env.FT_REDIRECT_URL + "?jwt=" + token);

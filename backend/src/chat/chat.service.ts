@@ -78,7 +78,6 @@ export class ChatService implements ChatProvider{
 		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(token, secret);
-		//let tokenn = JSON.parse(usernametoken);
 		const users = await this.userRepo.findBy({
 			username: Not(usernametoken.username),
 		})
@@ -92,16 +91,9 @@ export class ChatService implements ChatProvider{
 		let usernametoken = jwt.decode(channel.token, secret);
 		let json = {	"name": channel.channel_name,
 						"password": channel.password,
-						"owner": usernametoken.username,
-						"is_dm": channel.is_dm,
-						"is_private": channel.is_private
+						"owner_id": usernametoken.ft_id,
+						"channel_type": channel.channel_type
 					};
-		console.log(channel.channel_name)
-		//const chann = this.chanRepo
-		//			.createQueryBuilder()
-		//			.update(Channels)
-		//			.set({name: channel.channel_name, password: channel.password, owner: usernametoken.username, is_dm: channel.is_dm, is_private: channel.is_private})
-		//			.execute()
 		const chan = this.chanRepo.create(json);
 		return this.chanRepo.save(chan);
 	}
@@ -112,9 +104,22 @@ export class ChatService implements ChatProvider{
 		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(channel.token, secret);
-		if (this.chanRepo.findOne({ where: { owner: usernametoken.username}})) {
-			while (channel.Users) {
-				
+		if (this.userinchanRepo.findOne({ where: { is_admin: true, chanid: channel.channel_id, user_id: usernametoken.ft_id }})) {
+			if (channel.Users[0])
+			{
+			let chan = {
+				"user_id": "",
+				"chanid": -1,
+				"username": "",
+			};
+			channel.Users.map((user, i) => {
+				let json = {	"user_id": user.user_id,
+						"chanid": channel.channel_id,
+						"username": user.username
+					};
+					chan = this.userinchanRepo.create(json);
+			});
+			return this.userinchanRepo.save(chan);
 			}
 		}
 	}

@@ -1,15 +1,16 @@
 export class ChannelDTO {
 	token: string;
 	channel_name: string;
+	channel_type: string;
 	password: string;
-	is_dm: boolean;
-	is_private: boolean;
 }
 
 export class UserInChanDTO {
 	token: string;
-	Users: [
-		channel_id: number,
+	channel_id: number;
+	Users: [{
 		username: string,
+		user_id: string,
+	}
 	];
 }

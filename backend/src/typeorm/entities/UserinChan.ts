@@ -7,6 +7,9 @@ export class UsersInChan {
 	id: Number;
 
 	@Column()
+	user_id: string;
+
+	@Column()
 	chanid: number;
 
 	@Column()
