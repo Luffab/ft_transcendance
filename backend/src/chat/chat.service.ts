@@ -63,15 +63,17 @@ export class ChatService implements ChatProvider{
 	//	return this.messageArray;
 	//}
 
-	getAllChannels(token: string) {
+	async getAllChannels(token: string) {
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(token, secret);
 		const chanid = this.userinchan.chanid;
-		if (this.userinchanRepo.findOne({ where: { username: usernametoken }})) {
-			const chan = (this.chanRepo.findBy({ id: chanid }))
-			console.log(chan)
-			return (chan);
-		}
+		const channels = await this.chanRepo.find({
+			where : [
+				{ channel_type: "public" },
+				{ channel_type: "password" }
+			]
+		});
+		return channels;
 	}
 
 	async getAllUsers(token: string) {
@@ -120,6 +122,7 @@ export class ChatService implements ChatProvider{
 					chan = this.userinchanRepo.create(json);
 			});
 			return this.userinchanRepo.save(chan);
+
 			}
 		}
 	}
