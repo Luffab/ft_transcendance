@@ -102,7 +102,7 @@ export class ChatService implements ChatProvider{
 						"is_owner": true,
 						"isadmin": true
 					};
-		let addusers = this.userinchanRepo.create(adduser);
+		const addusers = this.userinchanRepo.create(adduser);
 		this.userinchanRepo.save(addusers);
 		return this.chanRepo.save(chan);
 	}
@@ -116,20 +116,14 @@ export class ChatService implements ChatProvider{
 		if (this.userinchanRepo.findOne({ where: { is_admin: true, chanid: channel.channel_id, user_id: usernametoken.ft_id }})) {
 			if (channel.Users[0])
 			{
-			let chan = {
-				"user_id": "",
-				"chanid": -1,
-				"username": "",
-			};
 			channel.Users.map((user, i) => {
 				let json = {	"user_id": user.user_id,
 						"chanid": channel.channel_id,
 						"username": user.username
 					};
-					chan = this.userinchanRepo.create(json);
+					const chan = this.userinchanRepo.create(json);
+					this.userinchanRepo.save(chan);
 			});
-			return this.userinchanRepo.save(chan);
-
 			}
 		}
 	}
