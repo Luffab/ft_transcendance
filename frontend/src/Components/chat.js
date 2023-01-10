@@ -36,7 +36,7 @@ export default function Broot({socket, my_ip}) {
 		setSocket(socket)
 		setChannels([...channels, {"channel_name": "2", "nb_unread_msg":3, "last_msg":"Bonjour 1"}])
 		setMessages_list([...messages_list, {"username": "gmadec", "message":"Bonjour tt le monde"}])
-		let url='http://'+my_ip+':3001/api/chat/channels?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
+		let url='http://'+my_ip+':3001/api/chat/channels?token='+(document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||"")
 		//let url='http://10.4.2.5:3001/api/chat/channels?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
 		axios.get(url)
 		.then(res => {
@@ -67,7 +67,7 @@ export default function Broot({socket, my_ip}) {
 
 	const getAll_other_users = () => {
 
-		let url='http://'+my_ip+':3001/api/chat/users?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyJ9.6VGR74ngyseMVgWBIowXFRUrUPBPEiWNcIX5_FEqTrw'
+		let url='http://'+my_ip+':3001/api/chat/users?token='+(document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||"")
 		axios.get(url)
 		.then(res => {
 		  console.log(res.data);
@@ -85,9 +85,12 @@ export default function Broot({socket, my_ip}) {
 	const create_channel = () => {
 		let url='http://'+my_ip+':3001/api/chat/create'
 		//let url='http://10.4.2.5:3001/api/chat/create'
+		let token=(document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||"")
+		console.log("COMPLETE COOKIE: [" + document.cookie + "]")
+		console.log("TOKEN VAR: [" + token + "]")
 
 		axios.post(url,{
-			"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs",
+			"token": (document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||""),
 			"channel_name": new_channel_name,
 			"channel_type": new_channel_type,
 			"password": new_channel_password
@@ -104,7 +107,7 @@ export default function Broot({socket, my_ip}) {
 		//let url='http://10.4.2.5:3001/api/chat/add_users'
 
 		axios.post(url,{
-			"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs",
+			"token": (document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||""),
 			"channel_name": new_channel_name,
 			"channel_type": new_channel_type,
 			"password": new_channel_password

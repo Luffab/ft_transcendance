@@ -30,13 +30,15 @@ import Game from "./Components/game";
 import Update_profil from "./Components/update_profil";
 import Settings from "./Components/settings";
 import Chat from "./Components/chat";
+import { Provider } from 'react-redux'
+import store from './redux/store'
 
-const socket = io('http://10.4.2.5:3001', {
+const my_ip = "10.4.2.5";
+const socket = io(my_ip+':3001', {
   transports: ['websocket'], 
   upgrade: false
 });
 
-const my_ip = "10.4.1.7";
 const router = createBrowserRouter([
 	{path: "/",element: <Welcome my_ip={my_ip}/>,},
     {path: "/home",element: <Home my_ip={my_ip} />,},
@@ -50,9 +52,10 @@ const router = createBrowserRouter([
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    {/*<Provider store={store}>*/}
+  <Provider store={store}>
+  {/*<Provider>*/}
+  {/*<React.StrictMode>*/}
       <RouterProvider router={router} />
-    {/*</Provider>*/}
-  </React.StrictMode>
+  {/*</React.StrictMode>*/}
+  </Provider>
 );
