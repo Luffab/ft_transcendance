@@ -20,7 +20,7 @@ export default function Broot({socket, my_ip}) {
 	const [new_channel_name, setNew_channel_name] = useState("")
 	const [new_channel_type, setNew_channel_type] = useState("public")
 	const [new_channel_password, setNew_channel_password] = useState("")
-	const [selected_channel_id, setSelected_channel_id] = useState()
+	const [selected_channel_id, setSelected_channel_id] = useState(-1)
 
 	
 	const sendMessage = (value) => {
@@ -29,7 +29,7 @@ export default function Broot({socket, my_ip}) {
 			socketId: mySocket.id,
 			text: value,
 			username: "default",
-			chan_id:selected_channel_id
+			chan_id:channels[selected_channel_id].id
 		}
 		//console.log("socketId = " + mySocket.id)
 		mySocket?.emit("messageEmitted", message)
@@ -128,9 +128,9 @@ export default function Broot({socket, my_ip}) {
 					{
 						channels.map((channel, i) => {
 							return (
-								<div key={i} className="row" onClick={()=> {setSelected_channel_id(channel.id);alert(selected_channel_id)}}>
+								<div key={i} className="row" onClick={()=> {setSelected_channel_id(i)}}>
 										<div className="col">
-											<div class="card" style={{backgroundColor: selected_channel_id===channel.id ?'blue':'none'}}>
+											<div class="card" style={{backgroundColor: selected_channel_id==channel.id ?'blue':'none'}}>
 												<div class="card-body">
 													<h5 class="card-title">{channel.name}</h5>
 													<h6 class="card-subtitle mb-2 text-muted">nb_unread_msg</h6>
@@ -177,7 +177,7 @@ export default function Broot({socket, my_ip}) {
 					})
 				}
 				{
-					selected_channel_id && 
+					selected_channel_id >= 0 && 
 				<div className="row">
 					<div className="col">
 						<ShowMessages messageArray={messageArray}/>
