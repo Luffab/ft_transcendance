@@ -32,6 +32,7 @@ import Settings from "./Components/settings";
 import Chat from "./Components/chat";
 import { Provider } from 'react-redux'
 import store from './redux/store'
+import Navbar from "./Containers/navbar";
 
 const my_ip = "10.4.2.5";
 const socket = io(my_ip+':3001', {
@@ -51,10 +52,15 @@ const router = createBrowserRouter([
 ]);
 
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+const root = ReactDOM.createRoot(
+  document.getElementById("root")
+)
+
+root.render(
   <Provider store={store}>
   {/*<Provider>*/}
   {/*<React.StrictMode>*/}
+      <Navbar/>
       <RouterProvider router={router} />
   {/*</React.StrictMode>*/}
   </Provider>

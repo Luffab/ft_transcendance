@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Root({my_ip}) {
+  const navigate = useNavigate();
     function create_game() {
         alert('Creer une partie')
         //window.location.href='http://10.4.2.5:3001/api/auth/login'
@@ -10,7 +13,8 @@ export default function Root({my_ip}) {
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Creer une partie
         </button>
-        <button className="btn btn-primary" onClick={()=>window.location.href='http://'+my_ip+':3000/update_profil'}>Modifier mon profil {' '}<i class="bi bi-gear-fill"></i></button>
+        <button className="btn btn-primary" onClick={()=>navigate("/update_profil")}>Modifier mon profil {' '}<i class="bi bi-gear-fill"></i></button>
+        <button className="btn btn-primary" onClick={()=>navigate("/chat")}>Chat {' '}</button>
         <table class="table">
             <thead>
                 <tr>

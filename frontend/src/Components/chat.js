@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
+import { useSelector, useDispatch } from 'react-redux';
 import io from "socket.io-client"
 import MessageInput from "./messageInput"
 import ShowMessages from "./messages"
 import axios from 'axios'
+import { get_token } from './../redux/reducers/config';
 
-let tab=["1", "1", "1", "1", "1", "1"]
 
 export default function Broot({socket, my_ip}) {
+	const my_token = useSelector(get_token);
 	const [mySocket, setSocket] = useState();
 	const [messageArray, setMessages] = useState([])
 	const [channels, setChannels] = useState([{"channel_name": "1", "nb_unread_msg":3, "last_msg":"Bonjour 1"}])
@@ -23,10 +25,11 @@ export default function Broot({socket, my_ip}) {
 	
 	const sendMessage = (value) => {
 		var message = {
-			jwt: document.cookie,
+			jwt: my_token,
 			socketId: mySocket.id,
 			text: value,
-			username: "default"
+			username: "default",
+			chan_id:selected_channel_id
 		}
 		//console.log("socketId = " + mySocket.id)
 		mySocket?.emit("messageEmitted", message)
@@ -36,7 +39,7 @@ export default function Broot({socket, my_ip}) {
 		setSocket(socket)
 		setChannels([...channels, {"channel_name": "2", "nb_unread_msg":3, "last_msg":"Bonjour 1"}])
 		setMessages_list([...messages_list, {"username": "gmadec", "message":"Bonjour tt le monde"}])
-		let url='http://'+my_ip+':3001/api/chat/channels?token='+(document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||"")
+		let url='http://'+my_ip+':3001/api/chat/channels?token='+my_token
 		//let url='http://10.4.2.5:3001/api/chat/channels?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
 		axios.get(url)
 		.then(res => {
@@ -67,7 +70,7 @@ export default function Broot({socket, my_ip}) {
 
 	const getAll_other_users = () => {
 
-		let url='http://'+my_ip+':3001/api/chat/users?token='+(document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||"")
+		let url='http://'+my_ip+':3001/api/chat/users?token='+my_token
 		axios.get(url)
 		.then(res => {
 		  console.log(res.data);
@@ -85,12 +88,12 @@ export default function Broot({socket, my_ip}) {
 	const create_channel = () => {
 		let url='http://'+my_ip+':3001/api/chat/create'
 		//let url='http://10.4.2.5:3001/api/chat/create'
-		let token=(document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||"")
+		let token=my_token
 		console.log("COMPLETE COOKIE: [" + document.cookie + "]")
 		console.log("TOKEN VAR: [" + token + "]")
 
 		axios.post(url,{
-			"token": (document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||""),
+			"token": my_token,
 			"channel_name": new_channel_name,
 			"channel_type": new_channel_type,
 			"password": new_channel_password
@@ -107,7 +110,7 @@ export default function Broot({socket, my_ip}) {
 		//let url='http://10.4.2.5:3001/api/chat/add_users'
 
 		axios.post(url,{
-			"token": (document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)||""),
+			"token": my_token,
 			"channel_name": new_channel_name,
 			"channel_type": new_channel_type,
 			"password": new_channel_password
@@ -173,12 +176,15 @@ export default function Broot({socket, my_ip}) {
 						)
 					})
 				}
+				{
+					selected_channel_id && 
 				<div className="row">
 					<div className="col">
-						<MessageInput sendFunction={sendMessage}/>
 						<ShowMessages messageArray={messageArray}/>
+						<MessageInput sendFunction={sendMessage}/>
 					</div>
 				</div>
+				}
 				{/* Modal */}
 				<div class="modal fade" id="modal_create_channel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">

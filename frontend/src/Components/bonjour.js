@@ -2,24 +2,18 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 //import { decrement, increment, incrementByAmount, get_token } from './../redux/reducers/counterSlice';
 import { get_token, modify_token } from './../redux/reducers/config';
+import { get_my_token_from_document } from '../helpers/functions'
 
 
 
 
 export default function Root({my_ip}) {
-  const token = useSelector(get_token);
   const dispatch = useDispatch();
+  const token = useSelector(get_token);
   const [incrementAmount, setIncrementAmount] = useState('2');
   return (
     <div>
       <div>
-        <button
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          +
-        </button>
-        <br/>
         <p >TOKEN REDUX:[{token}]</p>
         <br/>
         <br/>
@@ -29,19 +23,14 @@ export default function Root({my_ip}) {
         <br/>
       </div>
       <div>
-        <input
-          aria-label="Set increment amount"
-          value={incrementAmount}
-          onChange={e => setIncrementAmount(e.target.value)}
-        />
         <button
           onClick={() =>
-            dispatch(modify_token(String(document.cookie.split(';')[1].substring(document.cookie.split(';')[1].indexOf('=')+1)) || ''))
+            dispatch(modify_token(String(get_my_token_from_document('token_transcandence')) || ''))
           }
         >
-          Add Amount
+          dispatch token in Redux
         </button>
       </div>
     </div>
   );
-  }
+}
