@@ -24,14 +24,15 @@ export class AuthService implements AuthenticationProvider {
 			const { ft_id } = details;
 			const { emails } = details;
 			const user = await this.userRepo.findOne({ where: {ft_id: ft_id } });
+			let json = {	"username": details.username,
+						"ft_id": details.ft_id,
+						"accessToken": details.accessToken,
+						"refreshToken": details.refreshToken,
+						"emails": details.emails[0].value 
+
+					};
 			if (user) {
-				await this.userRepo.update({ ft_id }, details);
-				this.userRepo
-					.createQueryBuilder()
-					.update(User)
-					.set({ emails: emails[0].value })
-					.where("ft_id= :id", { id: ft_id })
-					.execute()
+				await this.userRepo.update({ ft_id }, json);
 				console.log('\nUser updated\n');
 				return user;
 			}
@@ -40,15 +41,25 @@ export class AuthService implements AuthenticationProvider {
 
 	async createUser(details: UserDetails) {
 		console.log('\nCreating User\n');
-		const { ft_id } = details;
-		const { emails } = details;
-		const user = this.userRepo.create(details);
-		this.userRepo
-					.createQueryBuilder()
-					.update(User)
-					.set({ emails: emails[0].value })
-					.where("ft_id= :id", { id: ft_id })
-					.execute()
+		let reqq = JSON.parse(JSON.stringify(details._json.image.link));
+		console.log(reqq);
+		const fetch = require('node-fetch');
+		const imageUrl = reqq;
+		const imageUrlData = await fetch(imageUrl);
+		const buffer = await imageUrlData.arrayBuffer();
+		const stringifiedBuffer = Buffer.from(buffer).toString('base64');
+		const contentType = imageUrlData.headers.get('content-type');
+		const imageBas64 =  `data:image/${contentType};base64,${stringifiedBuffer}`;
+		let json = {	"username": details.username,
+						"ft_id": details.ft_id,
+						"accessToken": details.accessToken,
+						"refreshToken": details.refreshToken,
+						"emails": details.emails[0].value,
+						"is2fa": false,
+						"avatar": imageBas64
+
+					};
+		const user = await this.userRepo.create(json);
 		return this.userRepo.save(user);
 	}
 
@@ -61,7 +72,8 @@ export class AuthService implements AuthenticationProvider {
 	//}
 	//
 	async generate2fa(ft_id: string, user: Partial<User>) {
-		if (this.userRepo.findOne({ where: { is2fa: true } })) {
+		let userz = await this.userRepo.findOne({ where: {ft_id: ft_id } })
+		if (userz.is2fa === true) {
 			let random = generateRandomString(6);
 			console.log(user.emails);
 			await this.mailService.sendUserConfirmation(user.emails, user.username, random);
@@ -72,15 +84,23 @@ export class AuthService implements AuthenticationProvider {
     			.where("ft_id= :id", { id: ft_id })
     			.execute()
 		}
-		return user;
 	}
 
-	twofaactivate(id: string) {
+	twofaactivate(ft_id: string) {
 		this.userRepo
     			.createQueryBuilder()
     			.update(User)
     			.set({ is2fa: true })
-    			.where("ft_id= :id", { ft_id: id })
+    			.where("ft_id= :id", { id: ft_id })
+    			.execute()
+	}
+
+	twofadesactivate(ft_id: string) {
+		this.userRepo
+    			.createQueryBuilder()
+    			.update(User)
+    			.set({ is2fa: false })
+    			.where("ft_id= :id", { id: ft_id })
     			.execute()
 	}
 }

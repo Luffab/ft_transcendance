@@ -7,6 +7,7 @@ export type UserDetails = {
 	avatar: string;
 	accessToken: string;
 	refreshToken: string;
+	_json: any;
 }
 
 export type Done = (err: Error, user: User) => void

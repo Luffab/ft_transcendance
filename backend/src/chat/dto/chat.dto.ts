@@ -14,3 +14,8 @@ export class UserInChanDTO {
 	}
 	];
 }
+
+export class UserNotInChanDTO {
+	token: string;
+	channel_id: number;
+}

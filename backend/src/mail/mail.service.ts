@@ -15,7 +15,7 @@ export class MailService {
       to: mail,
       from: "fttranscendance42@gmail.com", // override default from
       subject: 'Ton code de verification est la !',
-      template: './confirmation', // `.hbs` extension is appended automatically
+      template: 'confirmation', // `.hbs` extension is appended automatically
       context: { // ✏️ filling curly brackets with content
         name: username,
 		verify_code: code,

@@ -56,6 +56,7 @@ export class AuthController {
 	@UseGuards(AuthenticatedGuard)
 	generate(@Req() req: Request) {
 		let reqq = JSON.parse(JSON.stringify(req.user));
+		console.log(reqq.ft_id)
 	 	return this.authenticationService.generate2fa(reqq.ft_id, req.user)
 	}
 
@@ -63,7 +64,15 @@ export class AuthController {
 	@UseGuards(AuthenticatedGuard)
 	activate(@Req() req: Request) {
 		let reqq = JSON.parse(JSON.stringify(req.user));
+		console.log(reqq.ft_id)
 		return this.authenticationService.twofaactivate(reqq.ft_id);
+	}
+
+	@Get('2fa/desactivate')
+	@UseGuards(AuthenticatedGuard)
+	desactivate(@Req() req: Request) {
+		let reqq = JSON.parse(JSON.stringify(req.user));
+		return this.authenticationService.twofadesactivate(reqq.ft_id);
 	}
 }
 

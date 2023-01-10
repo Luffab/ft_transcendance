@@ -4,6 +4,8 @@ import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
 
+let password = process.env.MAIL_PASS;
+
 @Module({
   imports: [
     MailerModule.forRoot({
@@ -12,14 +14,14 @@ import { join } from 'path';
 		port: 2525,
         auth: {
           user: 'verifyuser',
-          pass: 'qXwB4fYx4Olpttt0',
+          pass: password,
         },
       },
       defaults: {
         from: '"No Reply" <noreply@example.com>',
       },
       template: {
-        dir: join(__dirname, '/templates'),
+        dir: 'src/mail/templates',
         adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
         options: {
           strict: true,

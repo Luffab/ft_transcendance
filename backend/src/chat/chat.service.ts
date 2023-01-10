@@ -8,7 +8,8 @@ import { Not, Repository } from 'typeorm';
 import { User } from 'src/typeorm';
 import { ChatProvider } from './chat';
 import { use } from 'passport';
-import { ChannelDTO, UserInChanDTO } from './dto/chat.dto';
+import { ChannelDTO, UserInChanDTO, UserNotInChanDTO } from './dto/chat.dto';
+import { channel } from 'diagnostics_channel';
 
 let jwt = require('jwt-simple');
 
@@ -89,32 +90,54 @@ export class ChatService implements ChatProvider{
 	async getAllChannels(token: string) {
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(token, secret);
-		const chanid = this.userinchan.chanid;
-		const channels = await this.chanRepo.find({
-			where : [
-				{ channel_type: "public" },
-				{ channel_type: "password" }
-			]
+		let user = await this.userinchanRepo.find({
+			select: {chanid: true},
+			where: { user_id: usernametoken.ft_id }
+		})
+		let channels;
+		user.map( (users) => {
+			channels = this.chanRepo.find({
+				where : [
+					{ channel_type: "public" },
+					{ channel_type: "password" },
+					{ channel_type: "private", id: users.chanid}
+				]
+			});
 		});
 		return channels;
 	}
 
+
 	async getAllUsers(token: string) {
-		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(token, secret);
 		const users = await this.userRepo.findBy({
 			username: Not(usernametoken.username),
 		})
-		//console.log(usernametoken.username);
 		return users;
 	}
 
+	async getUserNotInChan(UserNotInChan: UserNotInChanDTO)
+	{
+		let secret = process.env.JWT_SECRET;
+		let usernametoken = jwt.decode(UserNotInChan.token, secret);
+		if (this.userinchanRepo.findOne({ where: { is_admin: true, chanid: UserNotInChan.channel_id, user_id: usernametoken.ft_id }})) {
+			let chans = await this.userinchanRepo.find({
+				where: { chanid: UserNotInChan.channel_id}
+			});
+			let usernotchan;
+			chans.map( (users) => {
+				usernotchan = this.userRepo.find({
+					where: {ft_id: Not(users.user_id)}
+				})
+			})
+			return usernotchan;
+		}
+	}
+
 	async createChannel(channel: ChannelDTO) {
-		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(channel.token, secret);
-		console.log(usernametoken.ft_id);
 		let json = {	"name": channel.channel_name,
 						"password": channel.password,
 						"owner_id": usernametoken.ft_id,
@@ -135,19 +158,18 @@ export class ChatService implements ChatProvider{
 	//JSON TAB ITERATE
 
 	addUserInChan(channel: UserInChanDTO) {
-		let jwt = require('jwt-simple');
 		let secret = process.env.JWT_SECRET;
 		let usernametoken = jwt.decode(channel.token, secret);
 		if (this.userinchanRepo.findOne({ where: { is_admin: true, chanid: channel.channel_id, user_id: usernametoken.ft_id }})) {
 			if (channel.Users[0])
 			{
-			channel.Users.map((user, i) => {
+				channel.Users.map((user, i) => {
 				let json = {	"user_id": user.user_id,
 						"chanid": channel.channel_id,
 						"username": user.username
 					};
 					const chan = this.userinchanRepo.create(json);
-					this.userinchanRepo.save(chan);
+					return this.userinchanRepo.save(chan);
 			});
 			}
 		}
