@@ -5,10 +5,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { get_token, modify_token } from './../redux/reducers/config';
 import { useEffect, useState } from "react"
 import { get_my_token_from_document } from '../helpers/functions'
+import { useCookies } from 'react-cookie';
+
+
+
 
 export default function Root({my_ip}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [cookies, setCookie] = useCookies(['token_transcandence']);
 
   const my_token = useSelector(get_token);
 
@@ -17,8 +22,10 @@ export default function Root({my_ip}) {
     let token = queryParameters.get("jwt");
     if (token)
     {
-      document.cookie = "token_transcandence=" + token;
+      //document.cookie = "token_transcandence=" + token;
       dispatch(modify_token(String(token)))
+      setCookie('token_transcandence', token)
+      
     }
     if (my_token)
       navigate("/home")

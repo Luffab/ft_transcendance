@@ -19,6 +19,7 @@ reportWebVitals();
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import App from './App'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import io from "socket.io-client"
 /* existing imports */
@@ -33,6 +34,7 @@ import Chat from "./Components/chat";
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import Navbar from "./Containers/navbar";
+import { CookiesProvider } from 'react-cookie';
 
 const my_ip = "10.4.2.5";
 const socket = io(my_ip+':3001', {
@@ -58,10 +60,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <Provider store={store}>
-  {/*<Provider>*/}
-  {/*<React.StrictMode>*/}
-      <Navbar/>
-      <RouterProvider router={router} />
-  {/*</React.StrictMode>*/}
+    <CookiesProvider>
+      <App/>
+      {/*<Navbar/>
+      <RouterProvider router={router} />*/}
+    </CookiesProvider>
   </Provider>
 );

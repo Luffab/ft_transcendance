@@ -5,10 +5,12 @@ import MessageInput from "./messageInput"
 import ShowMessages from "./messages"
 import axios from 'axios'
 import { get_token } from './../redux/reducers/config';
+import { useCookies } from 'react-cookie';
 
 
 export default function Broot({socket, my_ip}) {
-	const my_token = useSelector(get_token);
+	const [my_token, setCookie] = useCookies(['token_transcandence']);
+	//const my_token = useSelector(get_token);
 	const [mySocket, setSocket] = useState();
 	const [messageArray, setMessages] = useState([])
 	const [channels, setChannels] = useState([{"channel_name": "1", "nb_unread_msg":3, "last_msg":"Bonjour 1"}])
