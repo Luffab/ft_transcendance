@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 
-export default function Root() {
+export default function Root({my_ip}) {
 	const queryParameters = new URLSearchParams(window.location.search)
     let token = queryParameters.get("jwt");
 	document.cookie = "token_transcandence=" + token;
     function login() {
-        window.location.href='http://10.4.1.5:3001/api/auth/login'
+        window.location.href='http://'+my_ip+':3001/api/auth/login'
+        //window.location.href='http://10.4.1.7:3001/api/auth/login'
     }
     return (
       <>

@@ -20,11 +20,14 @@ export class User{
 	@Column({ name: 'emails', nullable: true })
 	emails: string;
 
-	@Column({ default: null})
+	@Column({ default: false})
 	is2fa: boolean;
 
 	@Column({ nullable: true })
 	verify_code: string;
+
+	@Column({ nullable: true})
+	avatar: string;
 
 }
 

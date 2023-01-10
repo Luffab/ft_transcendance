@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { ChannelDTO, UserInChanDTO } from './dto/chat.dto';
+import { ChannelDTO, UserInChanDTO, UserNotInChanDTO } from './dto/chat.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -27,5 +27,10 @@ export class ChatController {
 	@Post('add_users')
 	addusers(@Body() body: UserInChanDTO) {
 		return this.chatService.addUserInChan(body);
+	}
+
+	@Get('get_users_not_in_chan')
+	getusersnotinchan(@Body() body: UserNotInChanDTO) {
+		return this.chatService.getUserNotInChan(body);
 	}
 }
