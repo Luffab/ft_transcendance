@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export default function Root({my_ip}) {
 	const queryParameters = new URLSearchParams(window.location.search)
@@ -23,6 +24,10 @@ export default function Root({my_ip}) {
   			  state: token
   			}}
 		>Chat</Link>
+    {
+      token &&
+      <Navigate to="/home" replace={true} />
+    }
       </>
     );
   }
