@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Root({my_ip}) {
+  const navigate = useNavigate();
 	const queryParameters = new URLSearchParams(window.location.search)
     let token = queryParameters.get("jwt");
 	  document.cookie = "token_transcandence=" + token;
@@ -24,10 +26,7 @@ export default function Root({my_ip}) {
   			  state: token
   			}}
 		>Chat</Link>
-    {
-      token &&
-      <Navigate to="/home" replace={true} />
-    }
+    <button className="btn btn-secondary" onClick={()=>navigate("/chat")}> {'CHAT WITH USENAVIGATE'}</button>
       </>
     );
   }
