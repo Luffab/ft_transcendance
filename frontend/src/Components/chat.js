@@ -8,9 +8,7 @@ import { get_token } from './../redux/reducers/config';
 import { useCookies } from 'react-cookie';
 
 
-export default function Broot({socket, my_ip}) {
-	const [my_token, setCookie] = useCookies(['token_transcandence']);
-	//const my_token = useSelector(get_token);
+export default function Broot({socket, my_ip, cookies}) {
 	const [mySocket, setSocket] = useState();
 	const [messageArray, setMessages] = useState([])
 	const [channels, setChannels] = useState([{"channel_name": "1", "nb_unread_msg":3, "last_msg":"Bonjour 1"}])
@@ -23,11 +21,10 @@ export default function Broot({socket, my_ip}) {
 	const [new_channel_type, setNew_channel_type] = useState("public")
 	const [new_channel_password, setNew_channel_password] = useState("")
 	const [selected_channel_id, setSelected_channel_id] = useState(-1)
-
 	
 	const sendMessage = (value) => {
 		var message = {
-			jwt: my_token,
+			jwt: cookies['token_transcandence'],
 			socketId: mySocket.id,
 			text: value,
 			username: "default",
@@ -41,7 +38,7 @@ export default function Broot({socket, my_ip}) {
 		setSocket(socket)
 		setChannels([...channels, {"channel_name": "2", "nb_unread_msg":3, "last_msg":"Bonjour 1"}])
 		setMessages_list([...messages_list, {"username": "gmadec", "message":"Bonjour tt le monde"}])
-		let url='http://'+my_ip+':3001/api/chat/channels?token='+my_token
+		let url='http://'+my_ip+':3001/api/chat/channels?token='+cookies['token_transcandence']
 		//let url='http://10.4.2.5:3001/api/chat/channels?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdtYWRlYyIsImlzMmZhIjpudWxsLCJmdF9pZCI6IjI5NTg0In0.gU_MV0TkUk7_Pmpl5553hVXquGunWHX-2sX5HbLi4cs'
 		axios.get(url)
 		.then(res => {
@@ -72,7 +69,7 @@ export default function Broot({socket, my_ip}) {
 
 	const getAll_other_users = () => {
 
-		let url='http://'+my_ip+':3001/api/chat/users?token='+my_token
+		let url='http://'+my_ip+':3001/api/chat/users?token='+cookies['token_transcandence']
 		axios.get(url)
 		.then(res => {
 		  console.log(res.data);
@@ -89,13 +86,9 @@ export default function Broot({socket, my_ip}) {
 
 	const create_channel = () => {
 		let url='http://'+my_ip+':3001/api/chat/create'
-		//let url='http://10.4.2.5:3001/api/chat/create'
-		let token=my_token
-		console.log("COMPLETE COOKIE: [" + document.cookie + "]")
-		console.log("TOKEN VAR: [" + token + "]")
 
 		axios.post(url,{
-			"token": my_token,
+			"token": cookies['token_transcandence'],
 			"channel_name": new_channel_name,
 			"channel_type": new_channel_type,
 			"password": new_channel_password
@@ -112,7 +105,7 @@ export default function Broot({socket, my_ip}) {
 		//let url='http://10.4.2.5:3001/api/chat/add_users'
 
 		axios.post(url,{
-			"token": my_token,
+			"token": cookies['token_transcandence'],
 			"channel_name": new_channel_name,
 			"channel_type": new_channel_type,
 			"password": new_channel_password
